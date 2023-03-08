@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+spring:
+  liquibase:
+    enabled: false
+    drop-first: false
+    change-log: classpath:database-account-changelog.xml
+
+  datasource:
+    url: jdbc:postgresql://postgres:5432/skillbox
+    username: account
+    password: account
+    driverClassName: org.postgresql.Driver
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        format_sql: true
+        default_schema: account
+    open-in-view: false

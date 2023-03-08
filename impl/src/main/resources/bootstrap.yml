@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: microservice-account
+
+  cloud:
+    kubernetes:
+      secrets:
+        sources:
+          - name: microservice-account
+      config:
+        sources:
+          - name: library-core
+          - name: microservice-account
+      reload:
+        enabled: true
+
+management:
+  endpoint:
+    restart:
+      enabled: true
+    health:
+      enabled: true
+    info:
+      enabled: true
+    prometheus:
+      enabled: true
