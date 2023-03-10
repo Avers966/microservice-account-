@@ -6,6 +6,7 @@ spring:
     enabled: false
     drop-first: false
     change-log: classpath:database-account-changelog.xml
+    default_schema: account
 
   datasource:
     url: jdbc:postgresql://postgres:5432/skillbox

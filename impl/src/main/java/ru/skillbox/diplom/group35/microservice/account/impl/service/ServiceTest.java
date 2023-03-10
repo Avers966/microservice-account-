@@ -5,6 +5,9 @@ import ru.skillbox.diplom.group35.library.core.dto.base.BaseDto;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountDto;
 import ru.skillbox.diplom.group35.microservice.account.domain.Account;
 
+import javax.annotation.PostConstruct;
+import javax.persistence.PostLoad;
+
 /**
  * service
  *
@@ -13,13 +16,17 @@ import ru.skillbox.diplom.group35.microservice.account.domain.Account;
 @Service
 public class ServiceTest {
 
-    public ServiceTest() {
+    @PostConstruct()
+    private void init()
+    {
+        BaseDto baseDto = new BaseDto();
+        baseDto.setDeleted(true);
+        System.out.println(baseDto);
+
+
+        AccountDto accountDto = new AccountDto();
+        accountDto.setDeleted(true);
+        System.out.println(accountDto);
     }
-
-
-    public AccountDto accountDto = new AccountDto();
-    public Account account = new Account();
-//
-//    public BaseDto baseDto = new BaseDto();
 
 }
