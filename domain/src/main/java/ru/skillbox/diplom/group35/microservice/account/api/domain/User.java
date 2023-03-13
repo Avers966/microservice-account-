@@ -1,38 +1,26 @@
-package ru.skillbox.diplom.group35.microservice.account.domain;
+package ru.skillbox.diplom.group35.microservice.account.api.domain;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
-import ru.skillbox.diplom.group35.library.core.entity.BaseEntity;
+import ru.skillbox.diplom.group35.library.core.model.base.BaseEntity;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.util.UUID;
 
 /**
  * User
  *
  * @author Georgii Vinogradov
  */
+
+
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
-@Table(name = "user")
-public class User extends BaseEntity{
-
-    @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id", unique = true)
-    private UUID id;
-
-    @Column(name = "is_online", nullable = false)
-    private boolean isDeleted;
-
+@NoArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
+public class User extends BaseEntity {
     @Column(name = "first_name", columnDefinition = "VARCHAR(255)", nullable = false)
     private String firstName;
 
