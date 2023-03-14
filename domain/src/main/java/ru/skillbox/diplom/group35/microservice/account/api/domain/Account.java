@@ -1,14 +1,11 @@
-package ru.skillbox.diplom.group35.microservice.account.domain;
+package ru.skillbox.diplom.group35.microservice.account.api.domain;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
-import ru.skillbox.diplom.group35.library.core.entity.BaseEntity;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
@@ -19,20 +16,9 @@ import java.util.UUID;
  */
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
-@Table(name = "account")
-public class Account extends BaseEntity{
-
-    @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id", unique = true)
-    private UUID id;
-
-    @Column(name = "is_deleted", nullable = false)
-    private Boolean isDeleted;
-
+@NoArgsConstructor
+public class Account extends User {
     @Column(name = "phone", columnDefinition = "VARCHAR(255)", nullable = false)
     private String phone;
 
@@ -44,6 +30,9 @@ public class Account extends BaseEntity{
 
     @Column(name = "city", columnDefinition = "VARCHAR(255)", nullable = false)
     private String city;
+
+    @Column(name = "country", columnDefinition = "VARCHAR(255)", nullable = false)
+    private String country;
 
     @Column(name = "status_code", columnDefinition = "VARCHAR(255)", nullable = false)
     private StatusCode statusCode;
