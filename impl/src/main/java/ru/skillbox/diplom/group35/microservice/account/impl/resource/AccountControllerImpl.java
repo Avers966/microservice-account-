@@ -22,69 +22,56 @@ import java.util.UUID;
  * @author Georgii Vinogradov
  */
 
-@Getter
-@Setter
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/account")
 public class AccountControllerImpl implements AccountController {
     private final AccountService accountService;
 
-    // todo: добавить получение по токену
+
     @Override
-    @GetMapping("/me")
-    public ResponseEntity<AccountDto> get() {
-        return ResponseEntity.ok(new AccountDto());
+    public ResponseEntity<AccountDto> get(@RequestHeader("Authorization") String token) {
+        return accountService.get(new AccountDto());
     }
 
     @Override
-    @GetMapping("/{id}")
     public ResponseEntity<AccountDto> getById(@PathVariable(name = "id") UUID id) {
         return accountService.getById(id);
     }
 
-    // todo: реализовать search
     @Override
-    @GetMapping("/search")
-    public ResponseEntity<Page<AccountDto>> search(@RequestBody AccountSearchDto searchDto,
-                                                   @RequestBody Pageable pageable) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Page<AccountDto>> search(AccountSearchDto searchDto,
+                                                   Pageable pageable) {
+        return accountService.search(searchDto, pageable);
     }
 
     @Override
-    @GetMapping
-    public ResponseEntity<Page<AccountDto>> getAll(@RequestBody AccountSearchDto searchDto,
-                                                   @RequestBody Pageable page) {
+    public ResponseEntity<Page<AccountDto>> getAll(AccountSearchDto searchDto,
+                                                   Pageable page) {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 
     @Override
-    @PostMapping
     public ResponseEntity<AccountDto> create(@RequestBody AccountDto dto) {
         return accountService.create(dto);
     }
 
-    // todo: добавить update по токену
     @Override
-    @PutMapping(value = "/me")
-    public ResponseEntity<AccountDto> update() {
-        return null;
+    public ResponseEntity<AccountDto> update(@RequestHeader("Authorization") String token) {
+        return accountService.update(new AccountDto());
     }
 
     @Override
-    @PutMapping
     public ResponseEntity<AccountDto> update(@RequestBody AccountDto dto) {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 
-    // todo: добавить удаление по токену
     @Override
-    @DeleteMapping(value = "/me")
-    public void delete() {
+    public void delete(@RequestHeader("Authorization") String token) {
+        accountService.delete(new AccountDto());
     }
 
     @Override
-    @DeleteMapping(value = "/{id}")
     public void deleteById(@PathVariable(name = "id") UUID id) {
+        accountService.deleteById(id);
     }
 }

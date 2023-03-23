@@ -1,0 +1,36 @@
+image: maven:3.8.3-jdk-11
+
+stages:
+  - build
+  - docker_deploy
+
+build:
+  stage: build
+  only: 
+    - develop
+  script:
+    - mvn -s maven-settings.xml clean package
+  cache:
+    paths:
+      - impl/target/*.jar
+  artifacts:
+    paths:
+      - ./impl/target
+
+docker_deploy:
+  image: docker:19.03.12
+  stage: docker_deploy
+  only: 
+    - develop
+  variables:
+    TAG: latest
+    CI_REGISTRY_USER: alphateam35
+    CI_REGISTRY_PASSWORD: alphateam35_skill
+    CI_REGISTRY: docker.io
+    CI_REGISTRY_IMAGE: index.docker.io/alphateam35/microservice-account:$TAG
+  before_script:
+    - docker logout
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE .
+    - docker push $CI_REGISTRY_IMAGE

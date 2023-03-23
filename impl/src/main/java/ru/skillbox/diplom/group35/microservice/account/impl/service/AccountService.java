@@ -3,14 +3,20 @@ package ru.skillbox.diplom.group35.microservice.account.impl.service;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import ru.skillbox.diplom.group35.microservice.account.api.domain.Account;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountDto;
+import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountSearchDto;
+import ru.skillbox.diplom.group35.microservice.account.impl.mapper.AccountMapper;
 import ru.skillbox.diplom.group35.microservice.account.impl.repository.AccountRepository;
 
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,78 +25,54 @@ import java.util.UUID;
  *
  * @author Denis_Kholmogorov
  */
-@Getter
-@Setter
+
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AccountService {
 
     private final AccountRepository accountRepository;
+    private final AccountMapper accountMapper;
 
-    private Account dtoToAccount(AccountDto accountDto) {
-        Account account = new Account();
-        account.setId(accountDto.getId());
-        account.setIsDeleted(accountDto.getIsDeleted());
-        account.setFirstName(accountDto.getFirstName());
-        account.setLastName(accountDto.getLastName());
-        account.setEmail(accountDto.getEmail());
-        account.setPassword(accountDto.getPassword());
-        account.setPhone(accountDto.getPhone());
-        account.setPhoto(accountDto.getPhoto());
-        account.setAbout(accountDto.getAbout());
-        account.setCity(accountDto.getCity());
-        account.setCountry(accountDto.getCountry());
-        account.setStatusCode(accountDto.getStatusCode());
-        account.setRegDate(accountDto.getRegDate());
-        account.setBirthDate(accountDto.getBirthDate());
-        account.setMessagePermission(accountDto.getMessagePermission());
-        account.setLastOnlineTime(accountDto.getLastOnlineTime());
-        account.setIsOnline(accountDto.getIsOnline());
-        account.setIsBlocked(accountDto.getIsBlocked());
-        account.setPhotoId(accountDto.getPhotoId());
-        account.setPhotoName(accountDto.getPhotoName());
-        account.setCreatedOn(accountDto.getCreatedOn());
-        account.setUpdatedOn(accountDto.getUpdatedOn());
-        return account;
+    public ResponseEntity<AccountDto> get(AccountDto accountDto) {
+        return getById(accountDto.getId());
     }
 
-    private AccountDto accountToDto(Account account){
-        AccountDto accountDto = new AccountDto();
-        accountDto.setId(account.getId());
-        accountDto.setIsDeleted(account.getIsDeleted());
-        accountDto.setFirstName(account.getFirstName());
-        accountDto.setLastName(account.getLastName());
-        accountDto.setEmail(account.getEmail());
-        accountDto.setPassword(account.getPassword());
-        accountDto.setPhone(account.getPhone());
-        accountDto.setPhoto(account.getPhoto());
-        accountDto.setAbout(account.getAbout());
-        accountDto.setCountry(accountDto.getCountry());
-        accountDto.setStatusCode(account.getStatusCode());
-        accountDto.setRegDate(account.getRegDate());
-        accountDto.setBirthDate(account.getBirthDate());
-        accountDto.setMessagePermission(account.getMessagePermission());
-        accountDto.setLastOnlineTime(account.getLastOnlineTime());
-        accountDto.setIsOnline(account.getIsOnline());
-        accountDto.setIsBlocked(account.getIsBlocked());
-        accountDto.setPhotoId(account.getPhotoId());
-        accountDto.setPhotoName(account.getPhotoName());
-        accountDto.setCreatedOn(account.getCreatedOn());
-        accountDto.setUpdatedOn(account.getUpdatedOn());
-        return accountDto;
+    public ResponseEntity<Page<AccountDto>> search(AccountSearchDto searchDto,
+                                            Pageable pageable) {
+        return null;
     }
 
     public ResponseEntity<AccountDto> getById(UUID id) {
         Optional<Account> finder = accountRepository.findById(id);
         return finder.isPresent() ?
-                ResponseEntity.ok().body(accountToDto(finder.get())) :
+                ResponseEntity.ok().body(accountMapper.mapToDto(finder.get())) :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     public ResponseEntity<AccountDto> create(AccountDto dto) {
-        Account account = dtoToAccount(dto);
-        account = accountRepository.save(account);
-        return ResponseEntity.ok().body(accountToDto(account));
+        Account account = accountRepository
+                .save(accountMapper.mapToAccount(dto));
+        return ResponseEntity.ok().body(accountMapper.mapToDto(account));
+    }
+
+    public ResponseEntity<AccountDto> update(AccountDto accountDto) {
+        Account account = accountRepository
+                .save(accountMapper.mapToAccount(accountDto));
+        return ResponseEntity.ok().body(accountMapper.mapToDto(account));
+    }
+
+    public void delete(AccountDto accountDto) {
+        deleteById(accountDto.getId());
+    }
+
+    public void deleteById(UUID id) {
+        accountRepository.findById(id)
+                .stream()
+                .forEach(p -> {
+                    p.setIsDeleted(true);
+                    accountRepository.save(p);
+                });
     }
 
 }
