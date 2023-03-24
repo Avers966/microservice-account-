@@ -1,21 +1,16 @@
 package ru.skillbox.diplom.group35.microservice.account.impl.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.AfterMapping;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 import ru.skillbox.diplom.group35.microservice.account.api.domain.Account;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountDto;
 
 @Mapper(componentModel = "spring")
-public abstract class AccountMapper {
-    @Mapping(target = "password", ignore = true)
-    public abstract AccountDto mapToDto(Account account);
+public interface AccountMapper {
+    @Mapping(target = "password", expression = "java(\"\")")
+    AccountDto mapToDto(Account account);
 
-    @AfterMapping
-    protected void clearPassword(@MappingTarget AccountDto accountDto) {
-        accountDto.setPassword("");
-    }
+    Account mapToAccount(AccountDto accountDto);
 
-    public abstract Account mapToAccount(AccountDto accountDto);
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    Account updateAccount(AccountDto accountDto, @MappingTarget Account account);
 }
