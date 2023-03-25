@@ -1,8 +1,8 @@
 package ru.skillbox.diplom.group35.microservice.account.impl.mapper;
 
 import org.mapstruct.*;
-import ru.skillbox.diplom.group35.microservice.account.api.domain.Account;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountDto;
+import ru.skillbox.diplom.group35.microservice.account.domain.model.Account;
 
 @Mapper(componentModel = "spring")
 public interface AccountMapper {

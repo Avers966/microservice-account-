@@ -24,3 +24,19 @@ spring:
         format_sql: true
         default_schema: ${DB_SCHEMA:account}
     open-in-view: false
+
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST:localhost}:9092
+    consumer:
+      group-id: ${KAFKA_GROUP_ID:app.1}
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      retries: 3
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+app:
+  topic:
+    account: ${KAFKA_TOPIC:topic-account}

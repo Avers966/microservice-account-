@@ -5,8 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.diplom.group35.library.core.controller.BaseController;
-import ru.skillbox.diplom.group35.library.core.dto.base.BaseDto;
-import ru.skillbox.diplom.group35.library.core.dto.base.BaseSearchDto;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountDto;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountSearchDto;
 
@@ -27,7 +25,7 @@ public interface AccountController extends BaseController<AccountDto, AccountSea
 
     @Override
     @GetMapping("/{id}")
-    ResponseEntity<AccountDto> getById(UUID uuid);
+    ResponseEntity<AccountDto> getById(UUID id);
 
     @GetMapping("/search")
     ResponseEntity<Page<AccountDto>> search(AccountSearchDto searchDto, Pageable pageable);

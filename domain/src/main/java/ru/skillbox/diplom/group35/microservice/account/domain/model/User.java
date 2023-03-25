@@ -1,4 +1,4 @@
-package ru.skillbox.diplom.group35.microservice.account.api.domain;
+package ru.skillbox.diplom.group35.microservice.account.domain.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
