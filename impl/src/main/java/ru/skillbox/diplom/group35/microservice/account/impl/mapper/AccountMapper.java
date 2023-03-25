@@ -6,7 +6,7 @@ import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountDto;
 
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
-    @Mapping(target = "password", expression = "java(\"\")")
+    @Mapping(target = "password", ignore = true)
     AccountDto mapToDto(Account account);
 
     Account mapToAccount(AccountDto accountDto);
