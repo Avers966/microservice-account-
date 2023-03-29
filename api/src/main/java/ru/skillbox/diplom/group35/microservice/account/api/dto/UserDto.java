@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.skillbox.diplom.group35.library.core.dto.base.BaseDto;
 
-import java.util.UUID;
-
 /**
  * UserDto
  *

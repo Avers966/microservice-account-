@@ -11,6 +11,7 @@ import ru.skillbox.diplom.group35.library.core.annotation.EnableBaseRepository;
  *
  * @author Denis_Kholmogorov
  */
+
 @EnableBaseRepository
 @SpringBootApplication(
         exclude = {SecurityAutoConfiguration.class,

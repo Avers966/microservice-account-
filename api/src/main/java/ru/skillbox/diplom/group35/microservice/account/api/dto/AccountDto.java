@@ -3,10 +3,9 @@ package ru.skillbox.diplom.group35.microservice.account.api.dto;
 import lombok.Getter;
 import lombok.Setter;
 import ru.skillbox.diplom.group35.library.core.dto.base.BaseDto;
-import ru.skillbox.diplom.group35.microservice.account.api.domain.StatusCode;
+import ru.skillbox.diplom.group35.microservice.account.domain.model.StatusCode;
 
 import java.time.ZonedDateTime;
-import java.util.UUID;
 
 /**
  * AccountDto

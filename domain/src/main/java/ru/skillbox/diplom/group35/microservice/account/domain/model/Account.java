@@ -1,13 +1,11 @@
-package ru.skillbox.diplom.group35.microservice.account.api.domain;
+package ru.skillbox.diplom.group35.microservice.account.domain.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
-import java.util.UUID;
 
 /**
  * Account
