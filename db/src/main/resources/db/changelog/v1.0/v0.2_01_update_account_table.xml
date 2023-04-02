@@ -1,0 +1,33 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- TABLES -->
+    <changeSet id="delete-nullable-constrains-from-account" author="Georgii Vinogradov">
+        <dropNotNullConstraint tableName="account" columnName="phone"/>
+        <dropNotNullConstraint tableName="account" columnName="city"/>
+        <dropNotNullConstraint tableName="account" columnName="country"/>
+        <dropNotNullConstraint tableName="account" columnName="status_code"/>
+        <dropNotNullConstraint tableName="account" columnName="reg_date"/>
+        <dropNotNullConstraint tableName="account" columnName="birth_date"/>
+        <dropNotNullConstraint tableName="account" columnName="message_permission"/>
+        <dropNotNullConstraint tableName="account" columnName="last_online_time"/>
+        <dropNotNullConstraint tableName="account" columnName="is_online"/>
+        <dropNotNullConstraint tableName="account" columnName="is_blocked"/>
+    </changeSet>
+    <changeSet id="add-unique-constraint-to-email" author="Georgii Vinogradov">
+        <addUniqueConstraint tableName="user" columnNames="email"/>
+    </changeSet>
+
+    <!-- INDEXES -->
+    <!-- END INDEXES -->
+
+    <!-- FOREIGN KEYS -->
+    <!-- END FOREIGN KEYS -->
+
+    <!-- SEQUENCES -->
+    <!-- EDN SEQUENCES -->
+
+</databaseChangeLog>

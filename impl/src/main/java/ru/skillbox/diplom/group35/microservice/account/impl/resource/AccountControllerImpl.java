@@ -2,14 +2,21 @@ package ru.skillbox.diplom.group35.microservice.account.impl.resource;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 import ru.skillbox.diplom.group35.library.core.annotation.EnableExceptionHandler;
+import ru.skillbox.diplom.group35.library.core.utils.AccountDetails;
+import ru.skillbox.diplom.group35.library.core.utils.SecurityUtil;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountDto;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountSearchDto;
+import ru.skillbox.diplom.group35.microservice.account.impl.exception.UnauthorizedException;
 import ru.skillbox.diplom.group35.microservice.account.impl.service.AccountService;
 import ru.skillbox.diplom.group35.microservice.account.api.resource.AccountController;
 
@@ -28,14 +35,25 @@ import java.util.UUID;
 public class AccountControllerImpl implements AccountController {
     private final AccountService accountService;
 
-    @Override
-    public ResponseEntity<AccountDto> get(@RequestHeader("Authorization") String token) {
-        log.info("call method get with token: {}", token);
-        return ResponseEntity.ok(accountService.get(new AccountDto()));
+    @ExceptionHandler({UnauthorizedException.class})
+    protected ResponseEntity unauthorizedHandler(UnauthorizedException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @Override
-    public ResponseEntity<AccountDto> getById(@PathVariable(name = "id") UUID id) {
+    public ResponseEntity<Integer> getAccountCount() {
+        log.info("call get account count method");
+        return ResponseEntity.ok(accountService.getAccountCount());
+    }
+
+    @Override
+    public ResponseEntity<AccountDto> get(String bearerToken) {
+        log.info("call method get with token: {}", bearerToken);
+        return ResponseEntity.ok(accountService.get());
+    }
+
+    @Override
+    public ResponseEntity<AccountDto> getById(UUID id) {
         log.info("call getById with id: {}", id);
         return ResponseEntity.ok(accountService.getById(id));
     }
@@ -53,27 +71,27 @@ public class AccountControllerImpl implements AccountController {
     }
 
     @Override
-    public ResponseEntity<AccountDto> create(@RequestBody AccountDto dto) {
+    public ResponseEntity<AccountDto> create(AccountDto dto) {
         log.info("call create");
         return ResponseEntity.ok(accountService.create(dto));
     }
 
     @Override
-    public ResponseEntity<AccountDto> update(@RequestHeader("Authorization") String token) {
-        log.info("call update with token: {}", token);
-        return ResponseEntity.ok(accountService.update(new AccountDto()));
+    public ResponseEntity<AccountDto> update(String bearerToken, AccountDto dto) {
+        log.info("call update with token: {}", bearerToken);
+        return ResponseEntity.ok(accountService.update(dto));
     }
 
     @Override
-    public ResponseEntity<AccountDto> update(@RequestBody AccountDto dto) {
+    public ResponseEntity<AccountDto> update(AccountDto dto) {
         log.info("call update");
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 
     @Override
-    public void delete(@RequestHeader("Authorization") String token) {
-        log.info("call delete with token: {}", token);
-        accountService.delete(new AccountDto());
+    public void delete(String bearerToken) {
+        log.info("call delete with token: {}", bearerToken);
+        accountService.delete();
     }
 
     @Override
