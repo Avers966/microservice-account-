@@ -11,8 +11,8 @@ import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountSearchDto;
 import java.util.UUID;
 
 @FeignClient(
-        name = "microservice-account",
-//        url = "http://localhost:8080",
+        name = "accountFeignClient",
+        url = "http://microservice-account",
         path = "/api/v1/account")
 public interface AccountFeignClient{
 
