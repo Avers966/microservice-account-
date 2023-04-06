@@ -8,10 +8,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import ru.skillbox.diplom.group35.library.core.exception.UnauthorizedException;
+import ru.skillbox.diplom.group35.library.core.utils.SecurityUtil;
 import ru.skillbox.diplom.group35.microservice.account.domain.model.Account;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountDto;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountSearchDto;
-import ru.skillbox.diplom.group35.microservice.account.impl.exception.UnauthorizedException;
 import ru.skillbox.diplom.group35.microservice.account.domain.model.Account_;
 import ru.skillbox.diplom.group35.microservice.account.impl.mapper.AccountMapper;
 import ru.skillbox.diplom.group35.microservice.account.impl.repository.AccountRepository;
@@ -19,7 +20,6 @@ import ru.skillbox.diplom.group35.microservice.account.impl.repository.AccountRe
 
 import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.UUID;
 
 import static ru.skillbox.diplom.group35.library.core.utils.SpecificationUtil.*;
@@ -38,18 +38,8 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
+    private final SecurityUtil securityUtil;
 
-    private Account extractAccount() {
-        Account account = null;
-        try {
-            JwtAuthenticationToken token = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-            String email = token.getToken().getClaim("email").toString();
-            account = accountRepository.findOne(getSpecByEmail(email)).get();
-        } catch (Exception e) {
-            throw new UnauthorizedException();
-        }
-        return account;
-    }
 
     public Page<AccountDto> search(AccountSearchDto searchDto, Pageable pageable) {
         Page<Account> accounts = accountRepository.findAll(getSpecByAllFields(searchDto), pageable);
@@ -57,7 +47,7 @@ public class AccountService {
     }
 
     public AccountDto get() {
-        return accountMapper.mapToDto(extractAccount());
+        return getById(securityUtil.getAccountDetails().getId());
     }
 
     public AccountDto getById(UUID id) {
@@ -70,20 +60,17 @@ public class AccountService {
     }
 
     public AccountDto update(AccountDto accountDto) {
-        accountDto.setId(extractAccount().getId());
-        Account account = accountRepository.save(accountMapper.mapToAccount(accountDto));
-        return accountMapper.mapToDto(account);
+        Account extractAccount = accountRepository.getById(securityUtil.getAccountDetails().getId());
+        Account updatedAccount = accountMapper.updateAccount(accountDto, extractAccount);
+        return accountMapper.mapToDto(accountRepository.save(updatedAccount));
     }
 
     public void delete() {
-        accountRepository.delete(extractAccount());
+        accountRepository.deleteById(securityUtil.getAccountDetails().getId());
     }
 
     public void deleteById(UUID id) {
-        accountRepository.findById(id).ifPresent(p -> {
-            p.setIsDeleted(true);
-            accountRepository.save(p);
-        });
+        accountRepository.deleteById(id);
     }
 
     public static Specification<Account> getSpecByAllFields(AccountSearchDto searchDto) {
@@ -98,10 +85,6 @@ public class AccountService {
                         searchDto.getAgeTo() == null ? null : ZonedDateTime.now().minusYears(searchDto.getAgeTo()),
                         searchDto.getAgeFrom() == null ? null : ZonedDateTime.now().minusYears(searchDto.getAgeFrom()),
                         true));
-    }
-
-    private static Specification<Account> getSpecByEmail(String email) {
-        return (root, query, cb) -> cb.equal(root.get("email"), email);
     }
 
     public Integer getAccountCount() {

@@ -2,21 +2,14 @@ package ru.skillbox.diplom.group35.microservice.account.impl.resource;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 import ru.skillbox.diplom.group35.library.core.annotation.EnableExceptionHandler;
-import ru.skillbox.diplom.group35.library.core.utils.AccountDetails;
-import ru.skillbox.diplom.group35.library.core.utils.SecurityUtil;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountDto;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountSearchDto;
-import ru.skillbox.diplom.group35.microservice.account.impl.exception.UnauthorizedException;
 import ru.skillbox.diplom.group35.microservice.account.impl.service.AccountService;
 import ru.skillbox.diplom.group35.microservice.account.api.resource.AccountController;
 
@@ -34,11 +27,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AccountControllerImpl implements AccountController {
     private final AccountService accountService;
-
-    @ExceptionHandler({UnauthorizedException.class})
-    protected ResponseEntity unauthorizedHandler(UnauthorizedException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    }
 
     @Override
     public ResponseEntity<Integer> getAccountCount() {

@@ -7,9 +7,6 @@
     <!-- TABLES -->
 
     <changeSet id="create-table-account" author="Georgii Vinogradov">
-        <preConditions onFail="MARK_RAN">
-            <tableExists tableName="account"/>
-        </preConditions>
         <createTable tableName="account">
             <column name="id" type="uuid">
                 <constraints nullable="false" unique="true"/>
@@ -52,9 +49,6 @@
     </changeSet>
 
     <changeSet id="create-table-user" author="Georgii Vinogradov">
-        <preConditions onFail="MARK_RAN">
-            <tableExists tableName="user"/>
-        </preConditions>
         <createTable tableName="user">
             <column name="id" type="uuid">
                 <constraints nullable="false" unique="true"/>
