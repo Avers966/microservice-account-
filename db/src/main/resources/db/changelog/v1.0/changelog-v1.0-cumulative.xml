@@ -7,5 +7,6 @@
 
     <include file="v0.1_01_initial_schema.xml" relativeToChangelogFile="true"/>
     <include file="v0.2_01_update_account_table.xml" relativeToChangelogFile="true"/>
+    <include file="v03_01_delete_column_photoName.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

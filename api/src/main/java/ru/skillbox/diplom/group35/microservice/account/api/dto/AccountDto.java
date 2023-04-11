@@ -32,7 +32,6 @@ public class AccountDto extends BaseDto {
     private Boolean isOnline;
     private Boolean isBlocked;
     private String photoId;
-    private String photoName;
     private ZonedDateTime createdOn;
     private ZonedDateTime updatedOn;
 }
