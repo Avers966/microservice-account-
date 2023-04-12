@@ -30,11 +30,14 @@ public interface AccountController extends BaseController<AccountDto, AccountSea
     @GetMapping("/{id}")
     ResponseEntity<AccountDto> getById(@PathVariable(name = "id") UUID id);
 
+    @GetMapping
+    ResponseEntity<AccountDto> getByEmail(@RequestHeader("Authorization") String bearerToken, @RequestParam("email") String email);
+
     @GetMapping("/search")
     ResponseEntity<Page<AccountDto>> search(AccountSearchDto searchDto, Pageable pageable);
 
     @Override
-    @GetMapping
+    @GetMapping("/unsupported")
     ResponseEntity<Page<AccountDto>> getAll(AccountSearchDto searchDto, Pageable pageable);
 
     @Override
