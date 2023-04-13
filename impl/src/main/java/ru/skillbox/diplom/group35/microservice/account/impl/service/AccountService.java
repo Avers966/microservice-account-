@@ -14,6 +14,7 @@ import ru.skillbox.diplom.group35.microservice.account.domain.model.Account_;
 import ru.skillbox.diplom.group35.microservice.account.impl.mapper.AccountMapper;
 import ru.skillbox.diplom.group35.microservice.account.impl.repository.AccountRepository;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -50,6 +51,13 @@ public class AccountService {
         return accountMapper.mapToDto(accountRepository.getById(id));
     }
 
+    public AccountDto getByEmail(String email) {
+        Account account = accountRepository
+                .findOne(getSpecByEmail(email))
+                .orElseThrow(EntityNotFoundException::new);
+        return accountMapper.mapToDtoWithPass(account);
+    }
+
     public AccountDto create(AccountDto dto) {
         Account account = accountRepository.save(accountMapper.mapToAccount(dto));
         return accountMapper.mapToDto(account);
@@ -83,7 +91,14 @@ public class AccountService {
                         true));
     }
 
+    private static Specification<Account> getSpecByEmail(String email) {
+        return (root, query, cb) -> cb.equal(root.get("email"), email);
+    }
+
     public Integer getAccountCount() {
         return Math.toIntExact(accountRepository.count());
     }
+
+
+
 }

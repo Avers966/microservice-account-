@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import ru.skillbox.diplom.group35.library.core.annotation.EnableExceptionHandler;
+import ru.skillbox.diplom.group35.library.core.utils.SecurityUtil;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountDto;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountSearchDto;
 import ru.skillbox.diplom.group35.microservice.account.api.resource.AccountController;
@@ -37,7 +38,7 @@ public class AccountControllerImpl implements AccountController {
 
     @Override
     public ResponseEntity<AccountDto> get(String bearerToken) {
-        log.info("call method get with token: {}", bearerToken);
+        log.info("call method get with token - " + bearerToken);
         return ResponseEntity.ok(accountService.get());
     }
 
@@ -45,6 +46,12 @@ public class AccountControllerImpl implements AccountController {
     public ResponseEntity<AccountDto> getById(UUID id) {
         log.info("call getById with id: {}", id);
         return ResponseEntity.ok(accountService.getById(id));
+    }
+
+    @Override
+    public ResponseEntity<AccountDto> getByEmail(String bearerToken, String email) {
+        log.info("call getByEmail: {}", email);
+        return ResponseEntity.ok(accountService.getByEmail(email));
     }
 
     @Override
