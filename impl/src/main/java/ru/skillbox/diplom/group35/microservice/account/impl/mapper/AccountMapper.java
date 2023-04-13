@@ -9,6 +9,8 @@ public interface AccountMapper {
     @Mapping(target = "password", ignore = true)
     AccountDto mapToDto(Account account);
 
+    AccountDto mapToDtoWithPass(Account account);
+
     Account mapToAccount(AccountDto accountDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
