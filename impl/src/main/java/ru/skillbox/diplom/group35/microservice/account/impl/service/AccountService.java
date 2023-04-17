@@ -1,23 +1,31 @@
 package ru.skillbox.diplom.group35.microservice.account.impl.service;
 
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.skillbox.diplom.group35.library.core.utils.SecurityUtil;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountDto;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountSearchDto;
+import ru.skillbox.diplom.group35.microservice.account.api.dto.StatusCode;
 import ru.skillbox.diplom.group35.microservice.account.domain.model.Account;
 import ru.skillbox.diplom.group35.microservice.account.domain.model.Account_;
 import ru.skillbox.diplom.group35.microservice.account.impl.mapper.AccountMapper;
 import ru.skillbox.diplom.group35.microservice.account.impl.repository.AccountRepository;
+import ru.skillbox.diplom.group35.microservice.friend.feignclient.FriendFeignClient;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static ru.skillbox.diplom.group35.library.core.utils.SpecificationUtil.*;
 
@@ -37,10 +45,34 @@ public class AccountService {
     private final AccountMapper accountMapper;
     private final SecurityUtil securityUtil;
 
+    private final FriendFeignClient friendFeignClient;
+
 
     public Page<AccountDto> search(AccountSearchDto searchDto, Pageable pageable) {
         Page<Account> accounts = accountRepository.findAll(getSpecByAllFields(searchDto), pageable);
-        return accounts.map(accountMapper::mapToDto);
+        Page<AccountDto> accountDtoPage = accounts.map(accountMapper::mapToDto);
+
+        List<UUID> ids = accountDtoPage.stream()
+                .map(dto -> dto.getId())
+                .collect(Collectors.toList());
+
+        try {
+            ResponseEntity<Map<UUID, String>> response = friendFeignClient.checkFriend(ids);
+            if (response.getStatusCode().equals(HttpStatus.OK)) {
+                Map<UUID, String> foundFriendStatus = response.getBody();
+                accountDtoPage.stream()
+                        .filter(dto -> foundFriendStatus.containsKey(dto.getId()))
+                        .forEach(dto -> {
+                            StatusCode statusCode = StatusCode.valueOf(foundFriendStatus.get(dto.getId()));
+                            dto.setStatusCode(statusCode);
+                            log.info("set new status id:{} from:{} to:{}", dto.getId(), dto.getStatusCode(), statusCode);
+                        });
+            }
+        } catch (FeignException e) {
+            log.info("friend service unavailable");
+        }
+
+        return accountDtoPage;
     }
 
     public AccountDto get() {
