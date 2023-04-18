@@ -10,9 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.skillbox.diplom.group35.library.core.utils.SecurityUtil;
-import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountDto;
-import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountSearchDto;
-import ru.skillbox.diplom.group35.microservice.account.api.dto.StatusCode;
+import ru.skillbox.diplom.group35.microservice.account.api.dto.*;
 import ru.skillbox.diplom.group35.microservice.account.domain.model.Account;
 import ru.skillbox.diplom.group35.microservice.account.domain.model.Account_;
 import ru.skillbox.diplom.group35.microservice.account.impl.mapper.AccountMapper;
@@ -46,6 +44,17 @@ public class AccountService {
     private final SecurityUtil securityUtil;
 
     private final FriendFeignClient friendFeignClient;
+
+    public AccountStatisticResponseDto getAccountCount(AccountStatisticRequestDto statisticRequestDto) {
+        List<AccountCountPerAge> countPerAges = accountRepository.equalOrLessThen(statisticRequestDto.getDate());
+        List<StatPerMonth> statisticPerMonthList = accountRepository.getStatPerMonth(
+                statisticRequestDto.getFirstMonth(), statisticRequestDto.getLastMonth().plusMonths(1));
+        List<StatisticPerDateDto> statisticPerDateDtoList = statisticPerMonthList.stream()
+                .map(accountMapper::mapToStatisticPerDateDto)
+                .collect(Collectors.toList());
+        return new AccountStatisticResponseDto(countPerAges, statisticPerDateDtoList);
+    }
+
 
 
     public Page<AccountDto> search(AccountSearchDto searchDto, Pageable pageable) {
@@ -126,11 +135,4 @@ public class AccountService {
     private static Specification<Account> getSpecByEmail(String email) {
         return (root, query, cb) -> cb.equal(root.get("email"), email);
     }
-
-    public Integer getAccountCount() {
-        return Math.toIntExact(accountRepository.count());
-    }
-
-
-
 }
