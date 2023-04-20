@@ -9,9 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import ru.skillbox.diplom.group35.library.core.annotation.EnableExceptionHandler;
-import ru.skillbox.diplom.group35.library.core.utils.SecurityUtil;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountDto;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountSearchDto;
+import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountStatisticRequestDto;
+import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountStatisticResponseDto;
 import ru.skillbox.diplom.group35.microservice.account.api.resource.AccountController;
 import ru.skillbox.diplom.group35.microservice.account.impl.service.AccountService;
 
@@ -31,9 +32,9 @@ public class AccountControllerImpl implements AccountController {
     private final AccountService accountService;
 
     @Override
-    public ResponseEntity<Integer> getAccountCount() {
+    public ResponseEntity<AccountStatisticResponseDto> getAccountCount(AccountStatisticRequestDto statisticRequestDto) {
         log.info("call get account count method");
-        return ResponseEntity.ok(accountService.getAccountCount());
+        return ResponseEntity.ok(accountService.getAccountCount(statisticRequestDto));
     }
 
     @Override

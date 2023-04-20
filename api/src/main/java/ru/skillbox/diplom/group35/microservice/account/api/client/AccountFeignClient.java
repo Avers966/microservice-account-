@@ -4,6 +4,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountDto;
+import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountStatisticResponseDto;
 
 import java.util.UUID;
 
@@ -15,7 +16,7 @@ import java.util.UUID;
 public interface AccountFeignClient{
 
     @GetMapping("/statistic")
-    ResponseEntity<Integer> getAccountCount();
+    ResponseEntity<AccountStatisticResponseDto> getAccountCount();
 
     @GetMapping("/me")
     ResponseEntity<AccountDto> get();

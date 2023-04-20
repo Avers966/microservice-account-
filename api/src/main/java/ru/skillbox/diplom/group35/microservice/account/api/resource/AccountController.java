@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.skillbox.diplom.group35.library.core.controller.BaseController;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountDto;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountSearchDto;
+import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountStatisticRequestDto;
+import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountStatisticResponseDto;
 
 import java.util.UUID;
 
@@ -21,7 +23,7 @@ import java.util.UUID;
 public interface AccountController extends BaseController<AccountDto, AccountSearchDto> {
 
     @GetMapping("/statistic")
-    ResponseEntity<Integer> getAccountCount();
+    ResponseEntity<AccountStatisticResponseDto> getAccountCount(AccountStatisticRequestDto statisticRequestDto);
 
     @GetMapping("/me")
     ResponseEntity<AccountDto> get(@RequestHeader("Authorization") String bearerToken);
