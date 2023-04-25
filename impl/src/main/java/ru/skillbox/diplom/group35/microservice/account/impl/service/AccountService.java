@@ -56,8 +56,12 @@ public class AccountService {
     }
 
 
-
     public Page<AccountDto> search(AccountSearchDto searchDto, Pageable pageable) {
+        List<UUID> blockedByIdsList = friendFeignClient.getBlockFriendId().getBody();
+        log.info("got a list of blocked users");
+        blockedByIdsList.add(securityUtil.getAccountDetails().getId());
+        searchDto.setBlockedByIds(blockedByIdsList);
+
         Page<Account> accounts = accountRepository.findAll(getSpecByAllFields(searchDto), pageable);
         Page<AccountDto> accountDtoPage = accounts.map(accountMapper::mapToDto);
 
