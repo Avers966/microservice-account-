@@ -88,6 +88,17 @@ public class AccountService {
         return accountDtoPage;
     }
 
+    public Page<AccountDto> searchByStatusCode(AccountSearchDto searchDto, Pageable pageable) {
+        List<UUID> accountListWithStatus = friendFeignClient.statusFriend(
+                String.valueOf(searchDto.getStatusCode())).getBody();
+        searchDto.setIds(accountListWithStatus);
+        Page<Account> accounts = accountRepository.findAll(getSpecByAllFields(searchDto), pageable);
+        Page<AccountDto> accountDtoPage = accounts.map(accountMapper::mapToDto);
+        accountDtoPage.stream()
+                .forEach(accountDto -> accountDto.setStatusCode(searchDto.getStatusCode()));
+        return accountDtoPage;
+    }
+
     public AccountDto get() {
         return getById(securityUtil.getAccountDetails().getId());
     }
@@ -126,8 +137,6 @@ public class AccountService {
         return getBaseSpecification(searchDto)
                 .and(in(Account_.id, searchDto.getIds(), true))
                 .and(notIn(Account_.id, searchDto.getBlockedByIds(), true))
-                .and(equal(Account_.firstName, searchDto.getFirstName(), true))
-                .and(equal(Account_.lastName, searchDto.getLastName(), true))
                 .and(likeLowerCase(Account_.firstName, searchDto.getFirstName(), true))
                 .and(likeLowerCase(Account_.lastName, searchDto.getLastName(), true))
                 .and(between(Account_.birthDate,

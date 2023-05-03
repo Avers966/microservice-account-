@@ -38,6 +38,9 @@ public interface AccountController extends BaseController<AccountDto, AccountSea
     @GetMapping("/search")
     ResponseEntity<Page<AccountDto>> search(AccountSearchDto searchDto, Pageable pageable);
 
+    @GetMapping("/search/statusCode")
+    ResponseEntity<Page<AccountDto>> searchByStatusCode(AccountSearchDto searchDto, Pageable pageable);
+
     @Override
     @GetMapping("/unsupported")
     ResponseEntity<Page<AccountDto>> getAll(AccountSearchDto searchDto, Pageable pageable);
