@@ -24,6 +24,7 @@ public class AccountSearchDto extends BaseSearchDto {
     private String city;
     private String country;
     private Boolean isBlocked;
+    private StatusCode statusCode;
     private Integer ageTo;
     private Integer ageFrom;
 }

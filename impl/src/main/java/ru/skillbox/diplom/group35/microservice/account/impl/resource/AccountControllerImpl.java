@@ -62,6 +62,12 @@ public class AccountControllerImpl implements AccountController {
     }
 
     @Override
+    public ResponseEntity<Page<AccountDto>> searchByStatusCode(AccountSearchDto searchDto, Pageable pageable) {
+        log.info("call searchByStatusCode");
+        return ResponseEntity.ok(accountService.searchByStatusCode(searchDto, pageable));
+    }
+
+    @Override
     public ResponseEntity<Page<AccountDto>> getAll(AccountSearchDto searchDto, Pageable page) {
         log.info("call getAll");
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
