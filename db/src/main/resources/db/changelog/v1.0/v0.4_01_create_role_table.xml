@@ -1,0 +1,66 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <property name="uuid_type" value="uuid" dbms="postgresql"/>
+    <property name="uuid_function" value="uuid_generate_v4()" dbms="postgresql"/>
+
+    <!-- TABLES -->
+
+    <changeSet id="create-table-role" author="Daniil Hromau">
+        <createTable tableName="role">
+            <column name="id" type="uuid">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="role" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_deleted" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+
+    <changeSet id="create-table-user-role" author="Daniil Hromau">
+        <createTable tableName="user_role">
+            <column name="id" type="uuid">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="user_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="insert-roles" author="Daniil Hromau">
+        <insert tableName="role">
+            <column name="id" value="291f44a5-fd41-467f-a63b-4f2657879183"/>
+            <column name="role" value="ROLE_USER"/>
+            <column name="is_deleted" value="false"/>
+        </insert>
+        <insert tableName="role">
+            <column name="id" value="1950f252-3c40-4ab6-b744-74cb0ef2b01a"/>
+            <column name="role" value="ROLE_ADMIN"/>
+            <column name="is_deleted" value="false"/>
+        </insert>
+    </changeSet>
+
+    <!-- END TABLES -->
+
+    <!-- INDEXES -->
+    <!-- END INDEXES -->
+
+    <!-- FOREIGN KEYS -->
+    <!-- END FOREIGN KEYS -->
+
+    <!-- SEQUENCES -->
+    <!-- EDN SEQUENCES -->
+
+</databaseChangeLog>

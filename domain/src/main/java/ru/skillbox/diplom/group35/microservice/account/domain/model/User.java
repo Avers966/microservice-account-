@@ -7,6 +7,7 @@ import ru.skillbox.diplom.group35.library.core.model.base.BaseEntity;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 /**
  * User
@@ -38,4 +39,10 @@ public class User extends BaseEntity {
 
     @Column(name = "updated_on", nullable = false)
     private ZonedDateTime updatedOn;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_role",
+            joinColumns = {@JoinColumn (name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+    private List<Role> roles;
 }

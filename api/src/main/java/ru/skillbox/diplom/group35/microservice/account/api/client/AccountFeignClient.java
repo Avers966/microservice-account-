@@ -4,14 +4,15 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountDto;
+import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountSecureDto;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountStatisticResponseDto;
 
 import java.util.UUID;
 
 @FeignClient(
         name = "accountFeignClient",
-        url = "http://microservice-account",
-//        url = "http://localhost:8082",
+//        url = "http://microservice-account",
+        url = "http://localhost:8082",
         path = "/api/v1/account")
 public interface AccountFeignClient{
 
@@ -25,7 +26,7 @@ public interface AccountFeignClient{
     ResponseEntity<AccountDto> getById(@PathVariable(name = "id") UUID id);
 
     @GetMapping
-    ResponseEntity<AccountDto> getByEmail(@RequestParam("email") String email);
+    ResponseEntity<AccountSecureDto> getByEmail(@RequestParam("email") String email);
 
     @PostMapping
     ResponseEntity<AccountDto> create(@RequestBody AccountDto dto);
