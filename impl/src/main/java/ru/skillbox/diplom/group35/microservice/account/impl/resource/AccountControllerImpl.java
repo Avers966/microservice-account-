@@ -6,13 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import ru.skillbox.diplom.group35.library.core.annotation.EnableExceptionHandler;
-import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountDto;
-import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountSearchDto;
-import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountStatisticRequestDto;
-import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountStatisticResponseDto;
+import ru.skillbox.diplom.group35.microservice.account.api.dto.*;
 import ru.skillbox.diplom.group35.microservice.account.api.resource.AccountController;
 import ru.skillbox.diplom.group35.microservice.account.impl.service.AccountService;
 
@@ -26,6 +24,7 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
+@Transactional
 @EnableExceptionHandler
 @RequiredArgsConstructor
 public class AccountControllerImpl implements AccountController {
@@ -50,7 +49,7 @@ public class AccountControllerImpl implements AccountController {
     }
 
     @Override
-    public ResponseEntity<AccountDto> getByEmail(String bearerToken, String email) {
+    public ResponseEntity<AccountSecureDto> getByEmail(String bearerToken, String email) {
         log.info("call getByEmail: {}", email);
         return ResponseEntity.ok(accountService.getByEmail(email));
     }

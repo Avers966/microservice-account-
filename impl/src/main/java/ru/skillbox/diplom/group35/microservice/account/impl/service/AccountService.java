@@ -1,5 +1,6 @@
 package ru.skillbox.diplom.group35.microservice.account.impl.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,13 +14,16 @@ import ru.skillbox.diplom.group35.library.core.utils.SecurityUtil;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.*;
 import ru.skillbox.diplom.group35.microservice.account.domain.model.Account;
 import ru.skillbox.diplom.group35.microservice.account.domain.model.Account_;
+import ru.skillbox.diplom.group35.microservice.account.domain.model.Role;
 import ru.skillbox.diplom.group35.microservice.account.impl.mapper.AccountMapper;
 import ru.skillbox.diplom.group35.microservice.account.impl.repository.AccountRepository;
+import ru.skillbox.diplom.group35.microservice.account.impl.repository.RoleRepository;
 import ru.skillbox.diplom.group35.microservice.friend.feignclient.FriendFeignClient;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -42,8 +46,9 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
     private final SecurityUtil securityUtil;
-
     private final FriendFeignClient friendFeignClient;
+    private final RoleRepository repository;
+
 
     public AccountStatisticResponseDto getAccountCount(AccountStatisticRequestDto statisticRequestDto) {
         List<AccountCountPerAge> countPerAges = accountRepository.equalOrLessThen(statisticRequestDto.getDate());
@@ -107,15 +112,20 @@ public class AccountService {
         return accountMapper.mapToDto(accountRepository.getById(id));
     }
 
-    public AccountDto getByEmail(String email) {
+
+    public AccountSecureDto getByEmail(String email) {
         Account account = accountRepository
                 .findOne(getSpecByEmail(email))
                 .orElseThrow(EntityNotFoundException::new);
-        return accountMapper.mapToDtoWithPass(account);
+        return accountMapper.mapToSecureDto(account);
     }
 
     public AccountDto create(AccountDto dto) {
-        Account account = accountRepository.save(accountMapper.mapToAccount(dto));
+        Account account = accountMapper.mapToAccount(dto);
+        List<Role> roles = repository.findAll();
+        List<Role> userRoles = roles.stream().filter(role -> roles.contains("USER")).collect(Collectors.toList());
+        account.setRoles(userRoles);
+        accountRepository.save(account);
         return accountMapper.mapToDto(account);
     }
 

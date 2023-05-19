@@ -1,0 +1,47 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <property name="uuid_type" value="uuid" dbms="postgresql"/>
+    <property name="uuid_function" value="uuid_generate_v4()" dbms="postgresql"/>
+    <property name="now" value="now()" dbms="postgresql"/>
+
+
+    <!-- TABLES -->
+<!-- password: AlfaTeam -->
+    <changeSet id="insert-super-admin" author="Daniil Hromau">
+        <insert tableName="user">
+            <column name="id" value="1c527a5c-745b-4de7-8d78-9ec2e86fc7e0"/>
+            <column name="is_deleted" value="false"/>
+            <column name="first_name" value="super"/>
+            <column name="last_name" value="admin"/>
+            <column name="password" value="$2y$10$nS961wGaSvTvBFvJZeu.U.IUnmjsIHdzjJCW2xjGRRddG9g6wsklG"/>
+            <column name="email" value="super@admin.com"/>
+            <column name="created_on" valueComputed="${now}"/>
+            <column name="updated_on" valueComputed="${now}"/>
+        </insert>
+        <insert tableName="account">
+            <column name="id" value="1c527a5c-745b-4de7-8d78-9ec2e86fc7e0"/>
+        </insert>
+        <insert tableName="user_role">
+            <column name="id" valueComputed="${uuid_function}"/>
+            <column name="user_id" value="1c527a5c-745b-4de7-8d78-9ec2e86fc7e0"/>
+            <column name="role_id" value="1950f252-3c40-4ab6-b744-74cb0ef2b01a"/>
+        </insert>
+        <rollback/>
+    </changeSet>
+    <!--  -->
+
+    <!-- END TABLES -->
+
+    <!-- INDEXES -->
+    <!-- END INDEXES -->
+
+    <!-- FOREIGN KEYS -->
+    <!-- END FOREIGN KEYS -->
+
+    <!-- SEQUENCES -->
+    <!-- EDN SEQUENCES -->
+
+</databaseChangeLog>

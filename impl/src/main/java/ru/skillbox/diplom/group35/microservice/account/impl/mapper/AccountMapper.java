@@ -2,14 +2,17 @@ package ru.skillbox.diplom.group35.microservice.account.impl.mapper;
 
 import org.mapstruct.*;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountDto;
+import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountSecureDto;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.StatPerMonth;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.StatisticPerDateDto;
 import ru.skillbox.diplom.group35.microservice.account.domain.model.Account;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = RoleMapper.class)
 public interface AccountMapper {
     @Mapping(target = "password", ignore = true)
     AccountDto mapToDto(Account account);
+    @Mapping(target = "isDeleted", ignore = true)
+    AccountSecureDto mapToSecureDto(Account account);
 
     AccountDto mapToDtoWithPass(Account account);
 
