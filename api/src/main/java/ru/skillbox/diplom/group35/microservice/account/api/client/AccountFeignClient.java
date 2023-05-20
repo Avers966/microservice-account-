@@ -11,8 +11,8 @@ import java.util.UUID;
 
 @FeignClient(
         name = "accountFeignClient",
-//        url = "http://microservice-account",
-        url = "http://localhost:8082",
+       url = "http://microservice-account",
+        // url = "http://localhost:8082",
         path = "/api/v1/account")
 public interface AccountFeignClient{
 
