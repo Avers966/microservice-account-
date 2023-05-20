@@ -13,7 +13,7 @@ spring:
     default_schema: account
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://localhost:5432/skillbox
     username: account
     password: account
     driverClassName: org.postgresql.Driver
