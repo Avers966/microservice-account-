@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountDto;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountSecureDto;
+import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountStatisticRequestDto;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountStatisticResponseDto;
 
 import java.util.UUID;
@@ -17,7 +18,7 @@ import java.util.UUID;
 public interface AccountFeignClient{
 
     @GetMapping("/statistic")
-    ResponseEntity<AccountStatisticResponseDto> getAccountCount();
+    ResponseEntity<AccountStatisticResponseDto> getAccountStatistic(AccountStatisticRequestDto statisticRequestDto);
 
     @GetMapping("/me")
     ResponseEntity<AccountDto> get();

@@ -20,7 +20,7 @@ import java.util.UUID;
 public interface AccountController extends BaseController<AccountDto, AccountSearchDto> {
 
     @GetMapping("/statistic")
-    ResponseEntity<AccountStatisticResponseDto> getAccountCount(AccountStatisticRequestDto statisticRequestDto);
+    ResponseEntity<AccountStatisticResponseDto> getAccountStatistic(AccountStatisticRequestDto statisticRequestDto);
 
     @GetMapping("/me")
     ResponseEntity<AccountDto> get(@RequestHeader("Authorization") String bearerToken);

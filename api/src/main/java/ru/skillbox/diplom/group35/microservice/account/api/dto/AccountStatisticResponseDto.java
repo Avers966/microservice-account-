@@ -3,6 +3,7 @@ package ru.skillbox.diplom.group35.microservice.account.api.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.skillbox.diplom.group35.library.core.dto.statistic.StatisticPerDateDto;
 
 import java.util.List;
 
