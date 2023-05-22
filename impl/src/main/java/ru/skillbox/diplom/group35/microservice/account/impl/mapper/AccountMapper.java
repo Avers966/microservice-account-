@@ -1,10 +1,10 @@
 package ru.skillbox.diplom.group35.microservice.account.impl.mapper;
 
 import org.mapstruct.*;
+import ru.skillbox.diplom.group35.library.core.dto.statistic.StatisticPerDateDto;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountDto;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountSecureDto;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.StatPerMonth;
-import ru.skillbox.diplom.group35.microservice.account.api.dto.StatisticPerDateDto;
 import ru.skillbox.diplom.group35.microservice.account.domain.model.Account;
 
 @Mapper(componentModel = "spring", uses = RoleMapper.class)

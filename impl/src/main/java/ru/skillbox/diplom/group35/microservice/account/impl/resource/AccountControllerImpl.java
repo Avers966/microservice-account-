@@ -31,9 +31,9 @@ public class AccountControllerImpl implements AccountController {
     private final AccountService accountService;
 
     @Override
-    public ResponseEntity<AccountStatisticResponseDto> getAccountCount(AccountStatisticRequestDto statisticRequestDto) {
+    public ResponseEntity<AccountStatisticResponseDto> getAccountStatistic(AccountStatisticRequestDto statisticRequestDto) {
         log.info("call get account count method");
-        return ResponseEntity.ok(accountService.getAccountCount(statisticRequestDto));
+        return ResponseEntity.ok(accountService.getAccountStatistic(statisticRequestDto));
     }
 
     @Override

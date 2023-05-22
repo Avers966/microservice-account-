@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import ru.skillbox.diplom.group35.library.core.dto.statistic.StatisticPerDateDto;
 import ru.skillbox.diplom.group35.library.core.utils.SecurityUtil;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.*;
 import ru.skillbox.diplom.group35.microservice.account.domain.model.Account;
@@ -45,7 +46,7 @@ public class AccountService {
     private final RoleRepository repository;
 
 
-    public AccountStatisticResponseDto getAccountCount(AccountStatisticRequestDto statisticRequestDto) {
+    public AccountStatisticResponseDto getAccountStatistic(AccountStatisticRequestDto statisticRequestDto) {
         List<AccountCountPerAge> countPerAges = accountRepository.equalOrLessThen(statisticRequestDto.getDate());
         List<StatPerMonth> statisticPerMonthList = accountRepository.getStatPerMonth(
                 statisticRequestDto.getFirstMonth(), statisticRequestDto.getLastMonth().plusMonths(1));
