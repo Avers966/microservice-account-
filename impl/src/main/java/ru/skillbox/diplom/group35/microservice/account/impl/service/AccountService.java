@@ -1,14 +1,10 @@
 package ru.skillbox.diplom.group35.microservice.account.impl.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.skillbox.diplom.group35.library.core.utils.SecurityUtil;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.*;
@@ -23,7 +19,6 @@ import ru.skillbox.diplom.group35.microservice.friend.feignclient.FriendFeignCli
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -69,27 +64,25 @@ public class AccountService {
 
         Page<Account> accounts = accountRepository.findAll(getSpecByAllFields(searchDto), pageable);
         Page<AccountDto> accountDtoPage = accounts.map(accountMapper::mapToDto);
+        log.info("find accounts with blocked users");
 
         List<UUID> ids = accountDtoPage.stream()
-                .map(dto -> dto.getId())
+                .map(AccountDto::getId)
                 .collect(Collectors.toList());
 
-        try {
-            ResponseEntity<Map<UUID, String>> response = friendFeignClient.checkFriend(ids);
-            if (response.getStatusCode().equals(HttpStatus.OK)) {
-                Map<UUID, String> foundFriendStatus = response.getBody();
-                accountDtoPage.stream()
-                        .filter(dto -> foundFriendStatus.containsKey(dto.getId()))
-                        .forEach(dto -> {
-                            StatusCode statusCode = StatusCode.valueOf(foundFriendStatus.get(dto.getId()));
-                            dto.setStatusCode(statusCode);
-                            log.info("set new status id:{} from:{} to:{}", dto.getId(), dto.getStatusCode(), statusCode);
-                        });
-            }
-        } catch (FeignException e) {
-            log.info("friend service unavailable");
+        Map<UUID, String> foundFriendStatus = friendFeignClient.checkFriend(ids).getBody();
+        log.info("got relationship statuses from friendFeignClient");
+        log.info("number of requested relationships = {}", foundFriendStatus.size());
+        if (!foundFriendStatus.isEmpty()) {
+            accountDtoPage.stream()
+                .filter(dto -> foundFriendStatus.containsKey(dto.getId()))
+                .forEach(dto -> {
+                    StatusCode statusCode = StatusCode.valueOf(foundFriendStatus.get(dto.getId()));
+                    dto.setStatusCode(statusCode);
+                    log.info("set new status id:{} from:{} to:{}", dto.getId(), dto.getStatusCode(), statusCode);
+                });
         }
-
+        log.info("got a list of friends");
         return accountDtoPage;
     }
 
@@ -109,7 +102,16 @@ public class AccountService {
     }
 
     public AccountDto getById(UUID id) {
-        return accountMapper.mapToDto(accountRepository.getById(id));
+        AccountDto accountDto = accountMapper.mapToDto(accountRepository.getById(id));
+        log.info("got account with id: {}, name: {}", accountDto.getId(), accountDto.getFirstName());
+        if (!securityUtil.getAccountDetails().getId().equals(id)) {
+            Map<UUID, String> relationshipMap = friendFeignClient.checkFriend(List.of(id)).getBody();
+            if (!relationshipMap.isEmpty()) {
+                accountDto.setStatusCode(StatusCode.valueOf(relationshipMap.get(id)));
+                log.info("set statusCode - {}", accountDto.getStatusCode());
+            }
+        }
+        return accountDto;
     }
 
 
