@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.skillbox.diplom.group35.library.core.dto.statistic.StatisticPerDateDto;
 import ru.skillbox.diplom.group35.library.core.utils.SecurityUtil;
@@ -16,6 +17,7 @@ import ru.skillbox.diplom.group35.microservice.account.impl.mapper.AccountMapper
 import ru.skillbox.diplom.group35.microservice.account.impl.repository.AccountRepository;
 import ru.skillbox.diplom.group35.microservice.account.impl.repository.RoleRepository;
 import ru.skillbox.diplom.group35.microservice.friend.feignclient.FriendFeignClient;
+import ru.skillbox.diplom.group35.microservice.notification.feignclient.NotificationFeignClient;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
@@ -43,6 +45,7 @@ public class AccountService {
     private final AccountMapper accountMapper;
     private final SecurityUtil securityUtil;
     private final FriendFeignClient friendFeignClient;
+    private final NotificationFeignClient notificationFeignClient;
     private final RoleRepository repository;
 
 
@@ -129,6 +132,12 @@ public class AccountService {
         List<Role> userRoles = roles.stream().filter(role -> roles.contains("USER")).collect(Collectors.toList());
         account.setRoles(userRoles);
         accountRepository.save(account);
+        ResponseEntity<Boolean> resultCreateSettings = notificationFeignClient.createSetting(account.getId());
+        if (!resultCreateSettings.getBody()) {
+            log.info("account creation error");
+            throw new RuntimeException();
+        }
+        log.info("account creation successful");
         return accountMapper.mapToDto(account);
     }
 

@@ -1,5 +1,6 @@
 package ru.skillbox.diplom.group35.microservice.account.api.resource;
 
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,8 @@ import java.util.UUID;
 public interface AccountController extends BaseController<AccountDto, AccountSearchDto> {
 
     @GetMapping("/statistic")
-    ResponseEntity<AccountStatisticResponseDto> getAccountStatistic(AccountStatisticRequestDto statisticRequestDto);
+    ResponseEntity<AccountStatisticResponseDto> getAccountStatistic(
+            @SpringQueryMap AccountStatisticRequestDto statisticRequestDto);
 
     @GetMapping("/me")
     ResponseEntity<AccountDto> get(@RequestHeader("Authorization") String bearerToken);

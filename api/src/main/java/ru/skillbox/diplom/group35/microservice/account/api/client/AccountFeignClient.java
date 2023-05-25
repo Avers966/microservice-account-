@@ -1,6 +1,7 @@
 package ru.skillbox.diplom.group35.microservice.account.api.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountDto;
@@ -12,13 +13,14 @@ import java.util.UUID;
 
 @FeignClient(
         name = "accountFeignClient",
-       url = "http://microservice-account",
-        // url = "http://localhost:8082",
+        url = "http://microservice-account",
+//        url = "http://localhost:8082",
         path = "/api/v1/account")
 public interface AccountFeignClient{
 
     @GetMapping("/statistic")
-    ResponseEntity<AccountStatisticResponseDto> getAccountStatistic(AccountStatisticRequestDto statisticRequestDto);
+    ResponseEntity<AccountStatisticResponseDto> getAccountStatistic(@SpringQueryMap
+                                                                    AccountStatisticRequestDto statisticRequestDto);
 
     @GetMapping("/me")
     ResponseEntity<AccountDto> get();
