@@ -8,7 +8,8 @@ stages:
 build:
   stage: build
   only: 
-    - develop
+#    - develop
+    - add_column_profile_cover
   script:
     - mvn -s maven-settings.xml clean package deploy
   variables:
@@ -25,7 +26,8 @@ docker_deploy:
   image: docker:19.03.12
   stage: docker_deploy
   only: 
-    - develop
+#    - develop
+    - add_column_profile_cover
   variables:
     TAG: latest
   before_script:
@@ -38,7 +40,8 @@ docker_deploy:
 deploy_prod:
   stage: deploy_prod
   only:
-    - develop
+#    - develop
+    - add_column_profile_cover
   except:
     - tags
   before_script:
