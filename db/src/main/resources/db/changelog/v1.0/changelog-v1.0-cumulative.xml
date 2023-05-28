@@ -10,5 +10,6 @@
     <include file="v03_01_delete_column_photoName.xml" relativeToChangelogFile="true"/>
     <include file="v0.4_01_create_role_table.xml" relativeToChangelogFile="true"/>
     <include file="v0.5_01_create_role_admin.xml" relativeToChangelogFile="true"/>
+    <include file="v0.6_01_add_column_profile_cover.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

@@ -20,6 +20,7 @@ public class AccountDto extends BaseDto {
     private String password;
     private String phone;
     private String photo;
+    private String profileCover;
     private String about;
     private String city;
     private String country;

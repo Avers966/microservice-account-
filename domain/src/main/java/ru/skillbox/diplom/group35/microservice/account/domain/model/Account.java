@@ -23,6 +23,9 @@ public class Account extends User {
     @Column(name = "photo", columnDefinition = "VARCHAR(255)")
     private String photo;
 
+    @Column(name = "profile_cover", columnDefinition = "VARCHAR(255)")
+    private String profileCover;
+
     @Column(name = "about", columnDefinition = "TEXT")
     private String about;
 
