@@ -8,16 +8,11 @@ stages:
 build:
   stage: build
   only: 
-#    - develop
-    - add_column_profile_cover
+   - develop
   script:
     - mvn -s maven-settings.xml clean package deploy
   variables:
     MAVEN_OPTS: "-Dmaven.repo.local=./.m2/repository"
-  cache:
-    paths:
-      - ./.m2/repository
-    key: "$CI_BUILD_REF_NAME"
   artifacts:
     paths:
       - ./impl/target
@@ -26,8 +21,7 @@ docker_deploy:
   image: docker:19.03.12
   stage: docker_deploy
   only: 
-#    - develop
-    - add_column_profile_cover
+   - develop
   variables:
     TAG: latest
   before_script:
@@ -40,8 +34,7 @@ docker_deploy:
 deploy_prod:
   stage: deploy_prod
   only:
-#    - develop
-    - add_column_profile_cover
+   - develop
   except:
     - tags
   before_script:
