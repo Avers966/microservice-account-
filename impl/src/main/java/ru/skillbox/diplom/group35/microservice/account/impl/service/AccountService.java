@@ -13,7 +13,9 @@ import ru.skillbox.diplom.group35.microservice.account.api.dto.*;
 import ru.skillbox.diplom.group35.microservice.account.domain.model.Account;
 import ru.skillbox.diplom.group35.microservice.account.domain.model.Account_;
 import ru.skillbox.diplom.group35.microservice.account.domain.model.Role;
+import ru.skillbox.diplom.group35.microservice.account.impl.mapper.AccountCountPerAgeMapper;
 import ru.skillbox.diplom.group35.microservice.account.impl.mapper.AccountMapper;
+import ru.skillbox.diplom.group35.microservice.account.api.dto.IAccountCountPerAge;
 import ru.skillbox.diplom.group35.microservice.account.impl.repository.AccountRepository;
 import ru.skillbox.diplom.group35.microservice.account.impl.repository.RoleRepository;
 import ru.skillbox.diplom.group35.microservice.friend.feignclient.FriendFeignClient;
@@ -41,6 +43,7 @@ import static ru.skillbox.diplom.group35.library.core.utils.SpecificationUtil.*;
 @RequiredArgsConstructor
 public class AccountService {
 
+    private final AccountCountPerAgeMapper accountCountPerAgeMapper;
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
     private final SecurityUtil securityUtil;
@@ -50,7 +53,9 @@ public class AccountService {
 
 
     public AccountStatisticResponseDto getAccountStatistic(AccountStatisticRequestDto statisticRequestDto) {
-        List<AccountCountPerAge> countPerAges = accountRepository.equalOrLessThen(statisticRequestDto.getDate());
+        List<IAccountCountPerAge> countPerAgesList = accountRepository.equalOrLessThen(statisticRequestDto.getDate());
+        List<AccountCountPerAge> countPerAges = accountCountPerAgeMapper.map(countPerAgesList);
+
         List<StatPerMonth> statisticPerMonthList = accountRepository.getStatPerMonth(
                 statisticRequestDto.getFirstMonth(), statisticRequestDto.getLastMonth().plusMonths(1));
         List<StatisticPerDateDto> statisticPerDateDtoList = statisticPerMonthList.stream()
@@ -58,6 +63,7 @@ public class AccountService {
                 .collect(Collectors.toList());
         ZonedDateTime dateTime = statisticRequestDto.getDate();
         Integer count = countPerAges.stream().map(AccountCountPerAge::getCount).reduce(0, Integer::sum);
+
         return new AccountStatisticResponseDto(dateTime, count, countPerAges, statisticPerDateDtoList);
     }
 
