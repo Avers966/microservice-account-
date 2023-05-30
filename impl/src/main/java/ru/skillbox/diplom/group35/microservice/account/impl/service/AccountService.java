@@ -56,7 +56,9 @@ public class AccountService {
         List<StatisticPerDateDto> statisticPerDateDtoList = statisticPerMonthList.stream()
                 .map(accountMapper::mapToStatisticPerDateDto)
                 .collect(Collectors.toList());
-        return new AccountStatisticResponseDto(countPerAges, statisticPerDateDtoList);
+        ZonedDateTime dateTime = statisticRequestDto.getDate();
+        Integer count = countPerAges.stream().map(AccountCountPerAge::getCount).reduce(0, Integer::sum);
+        return new AccountStatisticResponseDto(dateTime, count, countPerAges, statisticPerDateDtoList);
     }
 
 
