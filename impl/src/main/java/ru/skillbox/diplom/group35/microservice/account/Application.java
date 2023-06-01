@@ -2,6 +2,7 @@ package ru.skillbox.diplom.group35.microservice.account;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import ru.skillbox.diplom.group35.library.core.annotation.EnableBaseRepository;
 import ru.skillbox.diplom.group35.library.core.annotation.EnableOpenFeign;
 import ru.skillbox.diplom.group35.library.core.annotation.EnableSecurity;
@@ -15,6 +16,7 @@ import ru.skillbox.diplom.group35.library.core.annotation.JwtProvider;
 @JwtProvider
 @EnableSecurity
 @EnableOpenFeign
+@EnableScheduling
 @EnableBaseRepository
 @SpringBootApplication
 public class Application {

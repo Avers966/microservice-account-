@@ -59,4 +59,7 @@ public class Account extends User {
     @Column(name = "emoji_status", columnDefinition = "VARCHAR(255)")
     private String emojiStatus;
 
+    @Column(name = "deletion_timestamp")
+    private ZonedDateTime deletionTimestamp;
+
 }

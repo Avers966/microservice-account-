@@ -39,4 +39,6 @@ public interface AccountRepository extends BaseRepository<Account> {
             "GROUP BY DATE_TRUNC('month', u.createdOn)")
     List<StatPerMonth> getStatPerMonth(@Param("firstMonth") ZonedDateTime dateFirst,
                                        @Param("lastMonth") ZonedDateTime dateLast);
+
+    List<Account> findAccountByIsDeleted(Boolean bool);
 }

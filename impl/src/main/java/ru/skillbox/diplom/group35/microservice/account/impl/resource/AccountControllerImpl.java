@@ -93,7 +93,7 @@ public class AccountControllerImpl implements AccountController {
     @Override
     public void delete(String bearerToken) {
         log.info("call delete with token: {}", bearerToken);
-        accountService.delete();
+        accountService.softRemoval();
     }
 
     @Override

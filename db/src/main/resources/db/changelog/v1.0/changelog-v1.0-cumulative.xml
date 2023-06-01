@@ -16,5 +16,6 @@
     <include file="v0.8_01_update_user_roles.sql" relativeToChangelogFile="true"/>
     <include file="v0.9_01_create_authority_table.xml" relativeToChangelogFile="true"/>
     <include file="v0.9_02_update_user_authorities.sql" relativeToChangelogFile="true"/>
+    <include file="v0.10_01_add_column_deletion_timestamp.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
