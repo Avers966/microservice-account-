@@ -56,7 +56,7 @@ public class Account extends User {
     @Column(name = "is_blocked")
     private Boolean isBlocked;
 
-    @Column(name = "photo_id", columnDefinition = "VARCHAR(255)")
-    private String photoId;
+    @Column(name = "emoji_status", columnDefinition = "VARCHAR(255)")
+    private String emojiStatus;
 
 }

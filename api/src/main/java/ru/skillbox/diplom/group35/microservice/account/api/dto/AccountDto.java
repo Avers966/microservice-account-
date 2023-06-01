@@ -31,7 +31,7 @@ public class AccountDto extends BaseDto {
     private ZonedDateTime lastOnlineTime;
     private Boolean isOnline;
     private Boolean isBlocked;
-    private String photoId;
+    private String emojiStatus;
     private ZonedDateTime createdOn;
     private ZonedDateTime updatedOn;
 }
