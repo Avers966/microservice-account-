@@ -7,7 +7,7 @@ import ru.skillbox.diplom.group35.microservice.account.api.dto.AccountSecureDto;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.StatPerMonth;
 import ru.skillbox.diplom.group35.microservice.account.domain.model.Account;
 
-@Mapper(componentModel = "spring", uses = RoleMapper.class)
+@Mapper(componentModel = "spring", uses = {RoleMapper.class, AuthorityMapper.class})
 public interface AccountMapper {
     @Mapping(target = "password", ignore = true)
     AccountDto mapToDto(Account account);

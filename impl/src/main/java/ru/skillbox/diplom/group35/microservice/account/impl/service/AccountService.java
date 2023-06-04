@@ -17,6 +17,7 @@ import ru.skillbox.diplom.group35.microservice.account.impl.mapper.AccountCountP
 import ru.skillbox.diplom.group35.microservice.account.impl.mapper.AccountMapper;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.IAccountCountPerAge;
 import ru.skillbox.diplom.group35.microservice.account.impl.repository.AccountRepository;
+import ru.skillbox.diplom.group35.microservice.account.impl.repository.AuthorityRepository;
 import ru.skillbox.diplom.group35.microservice.account.impl.repository.RoleRepository;
 import ru.skillbox.diplom.group35.microservice.friend.feignclient.FriendFeignClient;
 import ru.skillbox.diplom.group35.microservice.notification.feignclient.NotificationFeignClient;
@@ -49,7 +50,8 @@ public class AccountService {
     private final SecurityUtil securityUtil;
     private final FriendFeignClient friendFeignClient;
     private final NotificationFeignClient notificationFeignClient;
-    private final RoleRepository repository;
+    private final RoleRepository roleRepository;
+    private final AuthorityRepository authorityRepository;
 
 
     public AccountStatisticResponseDto getAccountStatistic(AccountStatisticRequestDto statisticRequestDto) {
@@ -136,9 +138,8 @@ public class AccountService {
 
     public AccountDto create(AccountDto dto) {
         Account account = accountMapper.mapToAccount(dto);
-        List<Role> roles = repository.findAll();
-        List<Role> userRoles = roles.stream().filter(role -> roles.contains("USER")).collect(Collectors.toList());
-        account.setRoles(userRoles);
+        account.setRoles(roleRepository.getUserRoles());
+        account.setAuthorities(authorityRepository.findAll());
         accountRepository.save(account);
         ResponseEntity<Boolean> resultCreateSettings = notificationFeignClient.createSetting(account.getId());
         if (!resultCreateSettings.getBody()) {
