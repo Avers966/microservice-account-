@@ -26,18 +26,22 @@ spring:
     open-in-view: false
 
   kafka:
-    bootstrap-servers: ${KAFKA_HOST:localhost}:9092
+    bootstrap-servers: 82.202.214.42:9094
     consumer:
-      group-id: ${KAFKA_GROUP_ID:app.1}
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: account.group
+      concurrency: 3
+      max.poll.interval.ms: 30000
+      spring.json.trusted.packages: ru.skillbox.diplom.group35.*
     producer:
       retries: 3
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    topic:
+      account: t.account.online
+      partition-count: 3
+      replication-factor: 1
+      response: account.message.out
+      request: account.message.in
 
-app:
-  topic:
-    account: ${KAFKA_TOPIC:topic-account}
-
+logging:
+  level:
+    org.springframework: info
+    org.apache.kafka: error

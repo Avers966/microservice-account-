@@ -12,10 +12,8 @@ import ru.skillbox.diplom.group35.library.core.utils.SecurityUtil;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.*;
 import ru.skillbox.diplom.group35.microservice.account.domain.model.Account;
 import ru.skillbox.diplom.group35.microservice.account.domain.model.Account_;
-import ru.skillbox.diplom.group35.microservice.account.domain.model.Role;
 import ru.skillbox.diplom.group35.microservice.account.impl.mapper.AccountCountPerAgeMapper;
 import ru.skillbox.diplom.group35.microservice.account.impl.mapper.AccountMapper;
-import ru.skillbox.diplom.group35.microservice.account.api.dto.IAccountCountPerAge;
 import ru.skillbox.diplom.group35.microservice.account.impl.repository.AccountRepository;
 import ru.skillbox.diplom.group35.microservice.account.impl.repository.AuthorityRepository;
 import ru.skillbox.diplom.group35.microservice.account.impl.repository.RoleRepository;
@@ -154,6 +152,13 @@ public class AccountService {
         Account extractAccount = accountRepository.getById(securityUtil.getAccountDetails().getId());
         Account updatedAccount = accountMapper.updateAccount(accountDto, extractAccount);
         return accountMapper.mapToDto(accountRepository.save(updatedAccount));
+    }
+
+    public void updateStatusOnline(AccountDto accountDto) {
+        Account extractAccount = accountRepository.getById(accountDto.getId());
+        log.info("current status online - {}", extractAccount.getIsOnline());
+        Account updatedAccount = accountMapper.updateAccount(accountDto, extractAccount);
+        accountRepository.save(updatedAccount);
     }
 
     public void delete() {
