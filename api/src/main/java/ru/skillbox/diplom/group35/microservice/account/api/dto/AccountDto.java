@@ -1,7 +1,6 @@
 package ru.skillbox.diplom.group35.microservice.account.api.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import ru.skillbox.diplom.group35.library.core.dto.base.BaseDto;
 
 import java.time.ZonedDateTime;
@@ -11,8 +10,7 @@ import java.time.ZonedDateTime;
  *
  * @author Denis_Kholmogorov
  */
-@Getter
-@Setter
+@Data
 public class AccountDto extends BaseDto {
     private String firstName;
     private String lastName;
