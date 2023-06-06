@@ -39,5 +39,4 @@ public class TopicConfig {
                             config.getPartitionCount(),
                             config.getReplicationFactor());
     }
-
 }
