@@ -30,7 +30,7 @@ spring:
     consumer:
       group-id: account.group
       concurrency: 3
-      max.poll.interval.ms: 30000
+      max.poll.interval.ms: 60000
       spring.json.trusted.packages: ru.skillbox.diplom.group35.*
     producer:
       retries: 3
