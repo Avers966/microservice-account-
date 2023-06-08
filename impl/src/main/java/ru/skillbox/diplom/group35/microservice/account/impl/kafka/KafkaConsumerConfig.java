@@ -29,7 +29,7 @@ public class KafkaConsumerConfig {
     public Map<String, Object> consumerConfigs() {
         Map<String, Object> properties = new HashMap<>();
         properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, config.getBootstrapAddress());
-        properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
+        properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, config.getGroupId());
         properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
