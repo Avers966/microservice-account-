@@ -138,8 +138,8 @@ public class AccountService {
         Account account = accountMapper.mapToAccount(dto);
         account.setRoles(roleRepository.getUserRoles());
         account.setAuthorities(authorityRepository.findAll());
-        accountRepository.save(account);
-        ResponseEntity<Boolean> resultCreateSettings = notificationFeignClient.createSetting(account.getId());
+        Account account1 = accountRepository.save(account);
+        ResponseEntity<Boolean> resultCreateSettings = notificationFeignClient.createSetting(account1.getId());
         if (!resultCreateSettings.getBody()) {
             log.info("account creation error");
             throw new RuntimeException();
