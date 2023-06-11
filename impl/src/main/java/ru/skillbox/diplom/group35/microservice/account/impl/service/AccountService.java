@@ -69,30 +69,14 @@ public class AccountService {
 
 
     public Page<AccountDto> search(AccountSearchDto searchDto, Pageable pageable) {
-        List<UUID> blockedByIdsList = friendFeignClient.getBlockFriendId().getBody();
-        log.info("got a list of blocked users");
-        blockedByIdsList.add(securityUtil.getAccountDetails().getId());
-        searchDto.setBlockedByIds(blockedByIdsList);
+        Page<AccountDto> accountDtoPage = accountRepository
+                .findAll(getSpecByAllFields(excludeBlockedUsers(searchDto)), pageable)
+                .map(accountMapper::mapToDto);
+        log.info("find accounts without blocked and deleted users");
 
-        Page<Account> accounts = accountRepository.findAll(getSpecByAllFields(searchDto), pageable);
-        Page<AccountDto> accountDtoPage = accounts.map(accountMapper::mapToDto);
-        log.info("find accounts with blocked users");
-
-        List<UUID> ids = accountDtoPage.stream()
-                .map(AccountDto::getId)
-                .collect(Collectors.toList());
-
-        Map<UUID, String> foundFriendStatus = friendFeignClient.checkFriend(ids).getBody();
-        log.info("got relationship statuses from friendFeignClient");
-        log.info("number of requested relationships = {}", foundFriendStatus.size());
+        Map<UUID, String> foundFriendStatus = getRelationshipStatuses(accountDtoPage);
         if (!foundFriendStatus.isEmpty()) {
-            accountDtoPage.stream()
-                .filter(dto -> foundFriendStatus.containsKey(dto.getId()))
-                .forEach(dto -> {
-                    StatusCode statusCode = StatusCode.valueOf(foundFriendStatus.get(dto.getId()));
-                    dto.setStatusCode(statusCode);
-                    log.info("set new status id:{} from:{} to:{}", dto.getId(), dto.getStatusCode(), statusCode);
-                });
+            settingStatuses(foundFriendStatus, accountDtoPage);
         }
         log.info("got a list of friends");
         return accountDtoPage;
@@ -126,7 +110,6 @@ public class AccountService {
         return accountDto;
     }
 
-
     public AccountSecureDto getByEmail(String email) {
         Account account = accountRepository
                 .findOne(getSpecByEmail(email))
@@ -138,8 +121,8 @@ public class AccountService {
         Account account = accountMapper.mapToAccount(dto);
         account.setRoles(roleRepository.getUserRoles());
         account.setAuthorities(authorityRepository.findAll());
-        Account account1 = accountRepository.save(account);
-        ResponseEntity<Boolean> resultCreateSettings = notificationFeignClient.createSetting(account1.getId());
+        accountRepository.save(account);
+        ResponseEntity<Boolean> resultCreateSettings = notificationFeignClient.createSetting(account.getId());
         if (!resultCreateSettings.getBody()) {
             log.info("account creation error");
             throw new RuntimeException();
@@ -165,6 +148,12 @@ public class AccountService {
         accountRepository.deleteById(securityUtil.getAccountDetails().getId());
     }
 
+    public void softRemoval() {
+        update(new AccountDto(securityUtil.getAccountDetails().getId(),
+                              true,
+                              ZonedDateTime.now()));
+    }
+
     public void deleteById(UUID id) {
         accountRepository.deleteById(id);
     }
@@ -185,5 +174,34 @@ public class AccountService {
 
     private static Specification<Account> getSpecByEmail(String email) {
         return (root, query, cb) -> cb.equal(root.get("email"), email);
+    }
+
+    private AccountSearchDto excludeBlockedUsers(AccountSearchDto searchDto) {
+        List<UUID> blockedByIdsList = friendFeignClient.getBlockFriendId().getBody();
+        log.info("got a list of blocked users from friendFeignClient");
+        blockedByIdsList.add(securityUtil.getAccountDetails().getId());
+        searchDto.setBlockedByIds(blockedByIdsList);
+        return searchDto;
+    }
+
+    private Map<UUID, String> getRelationshipStatuses(Page<AccountDto> accountDtoPage) {
+        List<UUID> ids = accountDtoPage.stream()
+                .map(AccountDto::getId)
+                .collect(Collectors.toList());
+        Map<UUID, String> foundFriendStatus = friendFeignClient.checkFriend(ids).getBody();
+        log.info("got relationship statuses from friendFeignClient");
+        log.info("number of requested relationships = {}", foundFriendStatus.size());
+        return foundFriendStatus;
+    }
+
+    private Page<AccountDto> settingStatuses(Map<UUID, String> foundFriendStatus, Page<AccountDto> accountDtoPage) {
+        accountDtoPage.stream()
+                .filter(dto -> foundFriendStatus.containsKey(dto.getId()))
+                .forEach(dto -> {
+                    StatusCode statusCode = StatusCode.valueOf(foundFriendStatus.get(dto.getId()));
+                    dto.setStatusCode(statusCode);
+                    log.info("set new status id:{} from:{} to:{}", dto.getId(), dto.getStatusCode(), statusCode);
+                });
+        return accountDtoPage;
     }
 }
