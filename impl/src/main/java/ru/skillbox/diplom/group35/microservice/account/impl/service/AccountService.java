@@ -78,7 +78,7 @@ public class AccountService {
         if (!foundFriendStatus.isEmpty()) {
             settingStatuses(foundFriendStatus, accountDtoPage);
         }
-        log.info("got a list of friends");
+        log.info("received a list of accounts with relationships");
         return accountDtoPage;
     }
 

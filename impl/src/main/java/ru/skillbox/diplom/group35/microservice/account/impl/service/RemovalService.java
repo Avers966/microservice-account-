@@ -30,7 +30,7 @@ public class RemovalService {
         List<Account> listAccountIsDeleted = accountRepository
                 .findAccountByIsDeleted(true);
         listAccountIsDeleted.forEach(account -> {
-            if (account.getDeletionTimestamp().getDayOfWeek().plus(7).equals(ZonedDateTime.now().getDayOfWeek())) {
+            if (account.getDeletionTimestamp().getDayOfWeek().plus(0).equals(ZonedDateTime.now().getDayOfWeek())) {
                 AccountDto accountDto = new AccountDto()
                         .setEmail("")
                         .setFirstName("User deleted")

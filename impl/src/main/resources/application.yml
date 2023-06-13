@@ -41,6 +41,15 @@ spring:
       response: account.message.out
       request: account.message.in
 
+springdoc:
+  api-docs:
+    enabled: true
+    path: '/api/v1/account/v3/api-docs'
+  swagger-ui:
+    path: '/api/v1/account/swagger-ui'
+    doc-expansion: none
+    disable-swagger-default-url: true
+
 logging:
   level:
     org.springframework: info
