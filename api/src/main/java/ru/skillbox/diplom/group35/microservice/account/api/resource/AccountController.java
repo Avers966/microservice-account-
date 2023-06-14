@@ -98,4 +98,9 @@ public interface AccountController extends BaseController<AccountDto, AccountSea
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "Удаление аккаунта", description = "Полность удаляет аккаунт из базы по id")
     void deleteById(@PathVariable(name = "id") UUID id);
+
+    @PutMapping("/birthdays")
+    @SecurityRequirement(name = "JWT")
+    @Operation(summary = "Отправка уведомлений", description = "Отправляет друзьям сообщение о наступившем дне рождении")
+    ResponseEntity sendBirthdayNotification();
 }

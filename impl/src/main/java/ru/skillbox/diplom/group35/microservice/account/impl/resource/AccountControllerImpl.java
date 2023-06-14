@@ -101,4 +101,9 @@ public class AccountControllerImpl implements AccountController {
         log.info("call delete with id: {}", id);
         accountService.deleteById(id);
     }
+
+    @Override
+    public ResponseEntity sendBirthdayNotification() {
+        return accountService.sendBirthdayNotification();
+    }
 }
