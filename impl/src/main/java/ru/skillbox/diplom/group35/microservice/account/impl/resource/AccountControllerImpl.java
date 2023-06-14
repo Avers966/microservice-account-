@@ -104,6 +104,7 @@ public class AccountControllerImpl implements AccountController {
 
     @Override
     public ResponseEntity sendBirthdayNotification() {
+        log.info("call BirthDayNotification");
         return accountService.sendBirthdayNotification();
     }
 }
