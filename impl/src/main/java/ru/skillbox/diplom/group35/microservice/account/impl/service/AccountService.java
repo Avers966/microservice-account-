@@ -158,6 +158,10 @@ public class AccountService {
         accountRepository.deleteById(id);
     }
 
+    public ResponseEntity sendBirthdayNotification() {
+        return ResponseEntity.ok().build();
+    }
+
     public static Specification<Account> getSpecByAllFields(AccountSearchDto searchDto) {
         return getBaseSpecification(searchDto)
                 .and(in(Account_.id, searchDto.getIds(), true))

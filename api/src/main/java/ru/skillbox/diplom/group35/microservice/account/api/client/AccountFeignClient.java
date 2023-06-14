@@ -42,4 +42,7 @@ public interface AccountFeignClient{
 
     @DeleteMapping(value = "/{id}")
     void deleteById(@PathVariable(name = "id") UUID id);
+
+    @PutMapping("/birthdays")
+    ResponseEntity sendBirthdayNotification();
 }
