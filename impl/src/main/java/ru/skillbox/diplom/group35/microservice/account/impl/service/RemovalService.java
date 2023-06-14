@@ -29,8 +29,9 @@ public class RemovalService {
     protected void removeAccountsIsDeleted() {
         List<Account> listAccountIsDeleted = accountRepository
                 .findAccountByIsDeleted(true);
+        log.info("Number of accounts to delete: {}" + listAccountIsDeleted.size());
         listAccountIsDeleted.forEach(account -> {
-            if (account.getDeletionTimestamp().getDayOfWeek().plus(0).equals(ZonedDateTime.now().getDayOfWeek())) {
+            if (account.getDeletionTimestamp().getDayOfWeek().plus(1).equals(ZonedDateTime.now().getDayOfWeek())) {
                 AccountDto accountDto = new AccountDto()
                         .setEmail("")
                         .setFirstName("User deleted")
@@ -48,6 +49,7 @@ public class RemovalService {
                         .setPassword("")
                         .setRegDate(null)
                         .setBirthDate(null)
+                        .setDeletionTimestamp(ZonedDateTime.now())
                         .setIsOnline(false)
                         .setProfileCover("")
                         .setPhoto(PHOTO_TO_DELETE);
