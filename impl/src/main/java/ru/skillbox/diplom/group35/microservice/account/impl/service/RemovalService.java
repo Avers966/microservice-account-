@@ -10,6 +10,7 @@ import ru.skillbox.diplom.group35.microservice.account.domain.model.Account;
 import ru.skillbox.diplom.group35.microservice.account.impl.repository.AccountRepository;
 
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 /**
@@ -24,14 +25,17 @@ import java.util.List;
 public class RemovalService {
     private final AccountService accountService;
     private final AccountRepository accountRepository;
-    private static final String PHOTO_TO_DELETE = "http://res.cloudinary.com/da0wr9y51/image/upload/v1686504522/del_photo.jpg";
+    private static final String PHOTO_TO_DELETE = "http://res.cloudinary.com/da0wr9y51/image/" +
+            "upload/v1686504522/del_photo.jpg";
+    private static final int DAYS_BEFORE_ACCOUNT_DELETION = 1;
     @Scheduled(cron="0 0 0 * * ?") // в полночь
     protected void removeAccountsIsDeleted() {
         List<Account> listAccountIsDeleted = accountRepository
                 .findAccountByIsDeleted(true);
-        log.info("Number of accounts to delete: {}" + listAccountIsDeleted.size());
+        log.info("Number of accounts to delete: " + listAccountIsDeleted.size());
         listAccountIsDeleted.forEach(account -> {
-            if (account.getDeletionTimestamp().getDayOfWeek().plus(1).equals(ZonedDateTime.now().getDayOfWeek())) {
+            ZonedDateTime deletionTime = account.getDeletionTimestamp();
+            if (deletionTime.until(ZonedDateTime.now(), ChronoUnit.DAYS) >= DAYS_BEFORE_ACCOUNT_DELETION) {
                 AccountDto accountDto = new AccountDto()
                         .setEmail("")
                         .setFirstName("User deleted")
