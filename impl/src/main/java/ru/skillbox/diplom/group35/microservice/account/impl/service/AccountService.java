@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.skillbox.diplom.group35.library.core.dto.statistic.StatisticPerDateDto;
+import ru.skillbox.diplom.group35.library.core.dto.streaming.EventNotificationDto;
 import ru.skillbox.diplom.group35.library.core.utils.SecurityUtil;
 import ru.skillbox.diplom.group35.microservice.account.api.dto.*;
 import ru.skillbox.diplom.group35.microservice.account.domain.model.Account;
@@ -23,6 +24,7 @@ import ru.skillbox.diplom.group35.microservice.notification.feignclient.Notifica
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -50,6 +52,8 @@ public class AccountService {
     private final NotificationFeignClient notificationFeignClient;
     private final RoleRepository roleRepository;
     private final AuthorityRepository authorityRepository;
+
+    private final KafkaProducerService producerService;
 
 
     public AccountStatisticResponseDto getAccountStatistic(AccountStatisticRequestDto statisticRequestDto) {
@@ -159,6 +163,15 @@ public class AccountService {
     }
 
     public ResponseEntity sendBirthdayNotification() {
+        List<Account> accountList = accountRepository.findByBirthdayToday();
+        List<EventNotificationDto> eventNotificationDtoList = new ArrayList<>();
+        accountList.forEach(account -> eventNotificationDtoList.add(new EventNotificationDto()
+                    .setAuthorId(account.getId())
+                    .setNotificationType("FRIEND_BIRTHDAY")
+                    .setContent("У " + account.getFirstName() + " " + account.getLastName() +
+                            " сегодня ДР. Не забудьте поздравить! Номер карты для поздравления: ********* :)"))
+        );
+        eventNotificationDtoList.forEach(eventNotificationDto -> producerService.send(eventNotificationDto));
         return ResponseEntity.ok().build();
     }
 
