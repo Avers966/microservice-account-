@@ -86,8 +86,8 @@ public class AccountControllerImpl implements AccountController {
 
     @Override
     public ResponseEntity<AccountDto> update(AccountDto dto) {
-        log.info("call update");
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        log.info("call update by Email");
+        return ResponseEntity.ok(accountService.updateByEmail(dto));
     }
 
     @Override

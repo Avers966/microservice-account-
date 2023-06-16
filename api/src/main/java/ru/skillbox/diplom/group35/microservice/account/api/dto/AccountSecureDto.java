@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 public class AccountSecureDto extends BaseDto {
-
+    private String firstName;
     private String email;
     private String password;
     private List<Role> roles;

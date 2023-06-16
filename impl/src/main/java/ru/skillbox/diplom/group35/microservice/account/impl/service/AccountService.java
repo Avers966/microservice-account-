@@ -141,6 +141,14 @@ public class AccountService {
         return accountMapper.mapToDto(accountRepository.save(updatedAccount));
     }
 
+    public AccountDto updateByEmail(AccountDto accountDto) {
+        Account extractAccount = accountRepository
+                .findAccountByEmail(accountDto.getEmail())
+                .stream().findFirst().get();
+        Account updatedAccount = accountMapper.updateAccount(accountDto, extractAccount);
+        return accountMapper.mapToDto(accountRepository.save(updatedAccount));
+    }
+
     public void updateStatusOnline(AccountDto accountDto) {
         Account extractAccount = accountRepository.getById(accountDto.getId());
         log.info("current status online - {}", extractAccount.getIsOnline());
@@ -221,4 +229,5 @@ public class AccountService {
                 });
         return accountDtoPage;
     }
+
 }
