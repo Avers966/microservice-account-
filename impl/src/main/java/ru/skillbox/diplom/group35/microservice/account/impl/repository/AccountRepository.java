@@ -42,6 +42,8 @@ public interface AccountRepository extends BaseRepository<Account> {
 
     List<Account> findAccountByIsDeleted(Boolean bool);
 
+    List<Account> findAccountByEmail(String email);
+
     @Query(value = "SELECT * FROM Account a " +
             "JOIN \"user\" u  ON a.id = u.id " +
             "WHERE " +

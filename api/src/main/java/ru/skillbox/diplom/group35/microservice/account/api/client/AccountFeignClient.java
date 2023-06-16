@@ -1,5 +1,7 @@
 package ru.skillbox.diplom.group35.microservice.account.api.client;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +38,9 @@ public interface AccountFeignClient{
 
     @PutMapping(value = "/me")
     ResponseEntity<AccountDto> update(@RequestBody AccountDto dto);
+
+    @PutMapping
+    ResponseEntity<AccountDto> updateByEmail(@RequestBody AccountDto dto);
 
     @DeleteMapping(value = "/me")
     void delete();
