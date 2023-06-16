@@ -32,6 +32,9 @@ public class ConstConfig {
     @Value("${spring.kafka.topic.account}")
     private String topic;
 
+    @Value("${spring.kafka.topic.birthday-notification}")
+    private String birthdayEventTopic;
+
     @Value("${spring.kafka.topic.partition-count}")
     private Integer partitionCount;
 

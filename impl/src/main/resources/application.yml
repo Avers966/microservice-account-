@@ -40,6 +40,7 @@ spring:
       replication-factor: 1
       response: account.message.out
       request: account.message.in
+      birthday-notification: event
 
 springdoc:
   api-docs:

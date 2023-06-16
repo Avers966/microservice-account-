@@ -41,4 +41,20 @@ public interface AccountRepository extends BaseRepository<Account> {
                                        @Param("lastMonth") ZonedDateTime dateLast);
 
     List<Account> findAccountByIsDeleted(Boolean bool);
+
+    @Query(value = "SELECT * FROM Account a " +
+            "JOIN \"user\" u  ON a.id = u.id " +
+            "WHERE " +
+            "( " +
+            "(date_part('month', current_date) = 3 AND date_part('day', current_date) = 1 " +
+            "AND " +
+            "(date_part('day', a.birth_date) = 29 AND mod(cast(date_part('year', current_date) as integer), 4) <> 0))" +
+            ") " +
+            "OR " +
+            "(date_part('month', a.birth_date) = date_part('month', current_date) " +
+            "AND " +
+            "date_part('day', a.birth_date) = date_part('day', current_date)) " +
+            "AND mod(cast(date_part('year', a.birth_date) as integer), 4) = mod(cast(date_part('year', current_date) as integer), 4)"
+            , nativeQuery = true)
+    List<Account> findByBirthdayToday();
 }

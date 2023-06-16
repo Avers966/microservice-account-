@@ -42,6 +42,7 @@ spring:
       account: topic.account
       partition-count: 1
       replication-factor: 1
+      birthday-notification: event
 
 springdoc:
   api-docs:
