@@ -156,6 +156,13 @@ public class AccountService {
         accountRepository.save(updatedAccount);
     }
 
+    public void updateOnDeletion(AccountDto accountDto) {
+        log.info("call updateOnDeletion");
+        Account extractAccount = accountRepository.getById(accountDto.getId());
+        Account updatedAccount = accountMapper.updateAccount(accountDto, extractAccount);
+        accountRepository.save(updatedAccount);
+    }
+
     public void delete() {
         accountRepository.deleteById(securityUtil.getAccountDetails().getId());
     }

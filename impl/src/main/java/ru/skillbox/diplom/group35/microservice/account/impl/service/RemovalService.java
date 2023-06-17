@@ -57,7 +57,7 @@ public class RemovalService {
                         .setIsOnline(false)
                         .setProfileCover("")
                         .setPhoto(PHOTO_TO_DELETE);
-                accountService.update(accountDto);
+                accountService.updateOnDeletion(accountDto);
                 log.info("Account id: {}, firstName: {}, lastName: {} was deleted",
                         account.getId(), account.getFirstName(), account.getLastName());
             }
