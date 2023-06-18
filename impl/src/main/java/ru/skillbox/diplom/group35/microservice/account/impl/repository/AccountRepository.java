@@ -47,13 +47,13 @@ public interface AccountRepository extends BaseRepository<Account> {
     @Query(value = "SELECT * FROM Account a " +
             "JOIN \"user\" u  ON a.id = u.id " +
             "WHERE " +
-                "(date_part('month', current_date) = 3 AND date_part('day', current_date) = 1) " +
+                "(date_part('month', current_timestamp) = 3 AND date_part('day', current_timestamp) = 1) " +
                 "AND " +
-                "(date_part('day', a.birth_date) = 29 AND mod(cast(date_part('year', current_date) as integer), 4) <> 0)" +
+                "(date_part('day', a.birth_date) = 29 AND mod(cast(date_part('year', current_timestamp) as integer), 4) <> 0)" +
             "OR " +
-                "date_part('month', a.birth_date) = date_part('month', current_date) " +
+                "date_part('month', a.birth_date) = date_part('month', current_timestamp) " +
                 "AND " +
-                "date_part('day', a.birth_date) = date_part('day', current_date)"
+                "date_part('day', a.birth_date) = date_part('day', current_timestamp)"
             , nativeQuery = true)
     List<Account> findByBirthdayToday();
 }
