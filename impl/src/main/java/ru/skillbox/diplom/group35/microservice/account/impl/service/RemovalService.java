@@ -36,27 +36,28 @@ public class RemovalService {
         listAccountIsDeleted.forEach(account -> {
             ZonedDateTime deletionTime = account.getDeletionTimestamp();
             if (deletionTime.until(ZonedDateTime.now(), ChronoUnit.DAYS) >= DAYS_BEFORE_ACCOUNT_DELETION) {
-                AccountDto accountDto = new AccountDto()
-                        .setEmail("")
-                        .setFirstName("User deleted")
-                        .setLastName("")
-                        .setAbout("The account has been deleted")
-                        .setCity("")
-                        .setCountry("")
-                        .setEmojiStatus("")
-                        .setStatusCode(StatusCode.NONE)
-                        .setPhone("")
-                        .setCreatedOn(null)
-                        .setLastOnlineTime(null)
-                        .setMessagePermission("")
-                        .setUpdatedOn(null)
-                        .setPassword("")
-                        .setRegDate(null)
-                        .setBirthDate(null)
-                        .setDeletionTimestamp(ZonedDateTime.now())
-                        .setIsOnline(false)
-                        .setProfileCover("")
-                        .setPhoto(PHOTO_TO_DELETE);
+                AccountDto accountDto = new AccountDto();
+                accountDto.setEmail("");
+                accountDto.setFirstName("User deleted");
+                accountDto.setLastName("");
+                accountDto.setAbout("The account has been deleted");
+                accountDto.setCity("");
+                accountDto.setCountry("");
+                accountDto.setEmojiStatus("");
+                accountDto.setStatusCode(StatusCode.NONE);
+                accountDto.setPhone("");
+                accountDto.setCreatedOn(null);
+                accountDto.setLastOnlineTime(null);
+                accountDto.setMessagePermission("");
+                accountDto.setUpdatedOn(null);
+                accountDto.setPassword("");
+                accountDto.setRegDate(null);
+                accountDto.setBirthDate(null);
+                accountDto.setDeletionTimestamp(ZonedDateTime.now());
+                accountDto.setIsOnline(false);
+                accountDto.setProfileCover("");
+                accountDto.setPhoto(PHOTO_TO_DELETE);
+                accountDto.setId(account.getId());
                 accountService.updateOnDeletion(accountDto);
                 log.info("Account id: {}, firstName: {}, lastName: {} was deleted",
                         account.getId(), account.getFirstName(), account.getLastName());
