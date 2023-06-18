@@ -55,8 +55,7 @@ public interface AccountRepository extends BaseRepository<Account> {
             "OR " +
             "(date_part('month', a.birth_date) = date_part('month', current_date) " +
             "AND " +
-            "date_part('day', a.birth_date) = date_part('day', current_date)) " +
-            "AND mod(cast(date_part('year', a.birth_date) as integer), 4) = mod(cast(date_part('year', current_date) as integer), 4)"
+            "date_part('day', a.birth_date) = date_part('day', current_date)) "
             , nativeQuery = true)
     List<Account> findByBirthdayToday();
 }
