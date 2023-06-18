@@ -179,6 +179,7 @@ public class AccountService {
 
     public ResponseEntity sendBirthdayNotification() {
         List<Account> accountList = accountRepository.findByBirthdayToday();
+        log.info("Found {} records whose birthday is today", accountList.size());
         List<EventNotificationDto> eventNotificationDtoList = new ArrayList<>();
         accountList.forEach(account -> eventNotificationDtoList.add(new EventNotificationDto()
                     .setAuthorId(account.getId())
